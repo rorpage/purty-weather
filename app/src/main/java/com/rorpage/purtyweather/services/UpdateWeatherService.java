@@ -3,9 +3,7 @@ package com.rorpage.purtyweather.services;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 
@@ -15,6 +13,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.rorpage.purtyweather.PurtyWeatherApplication;
 import com.rorpage.purtyweather.managers.NotificationManager;
 
@@ -25,8 +26,7 @@ import org.json.JSONObject;
 import timber.log.Timber;
 
 public class UpdateWeatherService extends BaseService {
-    private LocationManager mLocationManager;
-    private String mProvider;
+    private FusedLocationProviderClient fusedLocationClient;
 
     private NotificationManager mNotificationManager;
     private PurtyWeatherApplication mPurtyWeatherApplication;
@@ -38,9 +38,7 @@ public class UpdateWeatherService extends BaseService {
         mNotificationManager = new NotificationManager(this);
         mPurtyWeatherApplication = (PurtyWeatherApplication) super.getApplication();
 
-        mLocationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        mProvider = mLocationManager.getBestProvider(criteria, false);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     @Override
@@ -63,8 +61,15 @@ public class UpdateWeatherService extends BaseService {
             return;
         }
 
-        Location location = mLocationManager.getLastKnownLocation(mProvider);
-        getWeather(location.getLatitude(), location.getLongitude());
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            getWeather(location.getLatitude(), location.getLongitude());
+                        }
+                    }
+                });
     }
 
     private void getWeather(double latitude, double longitude) {
