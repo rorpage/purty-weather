@@ -55,7 +55,6 @@ public class NotificationManager {
                                                               int smallIcon) {
         return new NotificationCompat.Builder(mContext, PRIMARY_CHANNEL)
                 .setSmallIcon(smallIcon)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(title)
                 .setContentText(message)
                 .setOngoing(true)
