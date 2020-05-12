@@ -20,6 +20,8 @@ import com.rorpage.purtyweather.models.DailyWeatherInfoUnit;
 import com.rorpage.purtyweather.models.WeatherResponse;
 import com.rorpage.purtyweather.util.GsonRequest;
 
+import java.util.Locale;
+
 import timber.log.Timber;
 
 public class UpdateWeatherService extends BaseService {
@@ -79,16 +81,18 @@ public class UpdateWeatherService extends BaseService {
                     public void onResponse(WeatherResponse weatherResponse) {
                         final double currentTemperature = weatherResponse.current.temp;
 
-                        final String title = String.format("%.0f\u00B0 and %s. Feels like %.0f\u00B0.",
+                        final String title = String.format(Locale.US,
+                                "%.0f\u00B0 and %s. Feels like %.0f\u00B0.",
                                 currentTemperature,
                                 weatherResponse.current.weather.get(0).description,
                                 weatherResponse.current.feels_like);
 
                         final DailyWeatherInfoUnit today = weatherResponse.daily.get(0);
-                        final String subtitle = String.format("Today: High %.0f\u00B0, low %.0f\u00B0, %s",
-                            today.temp.max,
-                            today.temp.min,
-                            today.weather.get(0).description);
+                        final String subtitle = String.format(Locale.US,
+                                "Today: High %.0f\u00B0, low %.0f\u00B0, %s",
+                                today.temp.max,
+                                today.temp.min,
+                                today.weather.get(0).description);
 
                         final int iconId = getIconId(currentTemperature);
 
