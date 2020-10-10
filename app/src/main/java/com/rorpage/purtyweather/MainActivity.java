@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         final PurtyWeatherApplication purtyWeatherApplication =
                 (PurtyWeatherApplication) getApplication();
 
-        ServiceManager.StartUpdateWeatherService(purtyWeatherApplication);
+        ServiceManager.startUpdateWeatherService(purtyWeatherApplication);
         WeatherUpdateScheduler.scheduleJob(purtyWeatherApplication);
     }
 

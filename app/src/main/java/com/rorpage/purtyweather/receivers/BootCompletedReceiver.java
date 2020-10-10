@@ -10,7 +10,7 @@ import com.rorpage.purtyweather.util.WeatherUpdateScheduler;
 public class BootCompletedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        ServiceManager.StartUpdateWeatherService(context);
+        ServiceManager.startUpdateWeatherService(context);
         WeatherUpdateScheduler.scheduleJob(context);
     }
 }

@@ -23,7 +23,7 @@ public class PurtyWeatherService extends JobService {
     public boolean onStartJob(JobParameters params) {
         Timber.d("onStartJob");
 
-        ServiceManager.StartUpdateWeatherService(mPurtyWeatherApplication);
+        ServiceManager.startUpdateWeatherService(mPurtyWeatherApplication);
         WeatherUpdateScheduler.scheduleJob(mPurtyWeatherApplication);
 
         return true;
