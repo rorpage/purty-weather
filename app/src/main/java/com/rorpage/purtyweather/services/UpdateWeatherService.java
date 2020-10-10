@@ -14,7 +14,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.rorpage.purtyweather.PurtyWeatherApplication;
 import com.rorpage.purtyweather.managers.NotificationManager;
 import com.rorpage.purtyweather.models.DailyWeatherInfoUnit;
 import com.rorpage.purtyweather.models.WeatherResponse;
@@ -28,14 +27,12 @@ public class UpdateWeatherService extends BaseService {
     private FusedLocationProviderClient fusedLocationClient;
 
     private NotificationManager mNotificationManager;
-    private PurtyWeatherApplication mPurtyWeatherApplication;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         mNotificationManager = new NotificationManager(this);
-        mPurtyWeatherApplication = (PurtyWeatherApplication) super.getApplication();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
@@ -67,7 +64,7 @@ public class UpdateWeatherService extends BaseService {
     private void getWeather(double latitude, double longitude) {
         Timber.d("getWeather");
 
-        final RequestQueue queue = Volley.newRequestQueue(mPurtyWeatherApplication);
+        final RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         final String url = String.format(
                 "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&units=%s",
                 Double.toString(latitude),
@@ -121,7 +118,6 @@ public class UpdateWeatherService extends BaseService {
     }
 
     private int getIconIdFromResources(String name, String defType) {
-        return mPurtyWeatherApplication.getResources()
-                .getIdentifier(name, defType, mPurtyWeatherApplication.getPackageName());
+        return getResources().getIdentifier(name, defType, getPackageName());
     }
 }

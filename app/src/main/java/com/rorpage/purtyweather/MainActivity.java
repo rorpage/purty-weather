@@ -29,11 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
 
-        final PurtyWeatherApplication purtyWeatherApplication =
-                (PurtyWeatherApplication) getApplication();
-
-        ServiceManager.startUpdateWeatherService(purtyWeatherApplication);
-        WeatherUpdateScheduler.scheduleJob(purtyWeatherApplication);
+        ServiceManager.startUpdateWeatherService(getApplicationContext());
+        WeatherUpdateScheduler.scheduleJob(getApplicationContext());
     }
 
     private void setupBottomNav() {
