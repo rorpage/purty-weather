@@ -1,21 +1,16 @@
 package com.rorpage.purtyweather
 
 import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.navigation.Navigation
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rorpage.purtyweather.managers.ServiceManager.startUpdateWeatherService
 import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.rorpage.purtyweather.R
-import com.rorpage.purtyweather.managers.ServiceManager
-import com.rorpage.purtyweather.util.WeatherUpdateScheduler
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
-import android.os.Build
-import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
