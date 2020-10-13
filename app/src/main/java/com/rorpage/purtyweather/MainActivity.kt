@@ -41,20 +41,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            val permissionsNeeded = ArrayList<String>()
-            permissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            val permissionsToRequest = ArrayList<String>()
-            for (permission in permissionsNeeded) {
-                if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
-                    permissionsToRequest.add(permission)
-                }
+        val permissionsNeeded = ArrayList<String>()
+        permissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionsToRequest = ArrayList<String>()
+        for (permission in permissionsNeeded) {
+            if (checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
+                permissionsToRequest.add(permission)
             }
-            if (permissionsToRequest.size > 0) {
-                val permissionsArray = permissionsToRequest.toTypedArray()
-                ActivityCompat.requestPermissions(this, permissionsArray, 1)
-            }
+        }
+        if (permissionsToRequest.size > 0) {
+            val permissionsArray = permissionsToRequest.toTypedArray()
+            ActivityCompat.requestPermissions(this, permissionsArray, 1)
         }
     }
 }
