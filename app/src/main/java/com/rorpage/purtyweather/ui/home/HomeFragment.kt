@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProviders
 import com.rorpage.purtyweather.R
 
 class HomeFragment : Fragment() {
@@ -15,8 +14,10 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView = root.findViewById<TextView>(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, { s -> textView.text = s })
+        val dateTextView = root.findViewById<TextView>(R.id.todays_date)
+        val temperatureTextView = root.findViewById<TextView>(R.id.temperature)
+        homeViewModel.dateLiveData.observe(viewLifecycleOwner, { s -> dateTextView.text = s })
+        homeViewModel.temperatureLiveData.observe(viewLifecycleOwner, { s -> temperatureTextView.text = s })
         return root
     }
 }

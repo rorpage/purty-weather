@@ -3,17 +3,25 @@ package com.rorpage.purtyweather.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class HomeViewModel : ViewModel() {
-    private val mText: MutableLiveData<String> = MutableLiveData()
-    val text: LiveData<String>
-        get() = mText
+    private val dateText: MutableLiveData<String> = MutableLiveData()
+    val dateLiveData: LiveData<String>
+        get() = dateText
 
-    fun setText(text: String) {
-        mText.value = text
-    }
+    private val temperatureText: MutableLiveData<String> = MutableLiveData()
+    val temperatureLiveData: LiveData<String>
+        get() = temperatureText
+
+    private val localDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+
+    private var temperature = 45
 
     init {
-        mText.value = "This is home fragment"
+        dateText.value = LocalDate.now().format(localDateFormatter)
+        temperatureText.value = "${temperature}°"
     }
 }
