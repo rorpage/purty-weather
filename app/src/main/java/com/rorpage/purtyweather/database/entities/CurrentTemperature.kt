@@ -9,6 +9,4 @@ data class CurrentTemperature(
         val id: Int,
         val temperature: Double,
         val feelsLike: Double
-) {
-
-}
+)
