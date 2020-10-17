@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class UpdateWeatherService : BaseService() {
@@ -85,7 +86,7 @@ class UpdateWeatherService : BaseService() {
         return if (temperature != null) {
             try {
                 val iconFormat = if (temperature < 0) "tempn%d" else "temp%d"
-                val iconName = String.format(iconFormat, temperature.toInt())
+                val iconName = String.format(iconFormat, temperature.roundToInt())
                 getIconIdFromResources(iconName, "drawable")
             } catch (e: Exception) {
                 Timber.e(e)
