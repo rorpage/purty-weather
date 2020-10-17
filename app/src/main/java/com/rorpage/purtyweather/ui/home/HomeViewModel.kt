@@ -18,10 +18,8 @@ class HomeViewModel : ViewModel() {
 
     private val localDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
 
-    private var temperature = 45
-
     init {
         dateText.value = LocalDate.now().format(localDateFormatter)
-        temperatureText.value = "${temperature}°"
+        temperatureText.value = "-°"
     }
 }
