@@ -8,13 +8,20 @@ import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rorpage.purtyweather.BuildConfig
+import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
+import com.rorpage.purtyweather.database.entities.CurrentTemperature
 import com.rorpage.purtyweather.managers.NotificationManager
 import com.rorpage.purtyweather.models.WeatherResponse
 import com.rorpage.purtyweather.util.GsonRequest
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class UpdateWeatherService : BaseService() {
+    @Inject lateinit var currentTemperatureDAO: CurrentTemperatureDAO
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
     override fun onCreate() {
@@ -65,6 +72,11 @@ class UpdateWeatherService : BaseService() {
                     today.weather!![0].description)
             val iconId = getIconId(currentTemperature)
             mNotificationManager.sendNotification(title, subtitle, iconId)
+            // TODO: 10/17/20 this is where we should save things to database for now, will change with refactor to retrofit
+            currentTemperatureDAO.insertCurrentTemperature(
+                    CurrentTemperature(1,
+                            currentTemperature ?: -40.0,
+                    weatherResponse.current?.feels_like ?: -40.0))
         }
         ) { error -> Timber.e(error) }
         queue.add(weatherResponseGsonRequest)
@@ -74,7 +86,7 @@ class UpdateWeatherService : BaseService() {
         return if (temperature != null) {
             try {
                 val iconFormat = if (temperature < 0) "tempn%d" else "temp%d"
-                val iconName = String.format(iconFormat, temperature.toInt())
+                val iconName = String.format(iconFormat, temperature.roundToInt())
                 getIconIdFromResources(iconName, "drawable")
             } catch (e: Exception) {
                 Timber.e(e)

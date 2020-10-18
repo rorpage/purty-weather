@@ -6,17 +6,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.rorpage.purtyweather.R
+import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private lateinit var homeViewModel: HomeViewModel
+
+    @Inject lateinit var currentTemperatureDAO: CurrentTemperatureDAO
+    private val homeViewModel: HomeViewModel by viewModels()
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView = root.findViewById<TextView>(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, { s -> textView.text = s })
+        val dateTextView = root.findViewById<TextView>(R.id.todays_date)
+        val temperatureTextView = root.findViewById<TextView>(R.id.temperature)
+        homeViewModel.dateLiveData.observe(viewLifecycleOwner, { s -> dateTextView.text = s })
+        homeViewModel.temperatureLiveData.observe(viewLifecycleOwner, { s -> temperatureTextView.text = s })
+
+        currentTemperatureDAO.getCurrentTemperature()
+                .observe(viewLifecycleOwner, { currentTemperature ->
+                    temperatureTextView.text = getString(
+                            R.string.temperature,
+                            currentTemperature.temperature.roundToInt()
+                    )
+                })
+
         return root
+    }
+
+    override fun onDestroyView() {
+        homeViewModel.dateLiveData.removeObservers(viewLifecycleOwner)
+        homeViewModel.temperatureLiveData.removeObservers(viewLifecycleOwner)
+        currentTemperatureDAO.getCurrentTemperature().removeObservers(viewLifecycleOwner)
+        super.onDestroyView()
     }
 }
