@@ -6,7 +6,9 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.gson.Gson
+import com.rorpage.purtyweather.BuildConfig
+import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
+import com.rorpage.purtyweather.database.entities.CurrentTemperature
 import com.rorpage.purtyweather.managers.NotificationManager
 import com.rorpage.purtyweather.models.ApiError
 import com.rorpage.purtyweather.models.WeatherResponse
@@ -18,11 +20,16 @@ import com.rorpage.purtyweather.network.safeApiCall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class UpdateWeatherService : BaseService() {
+    @Inject lateinit var currentTemperatureDAO: CurrentTemperatureDAO
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
     override fun onCreate() {
@@ -69,6 +76,11 @@ class UpdateWeatherService : BaseService() {
                 today.weather!![0].description)
         val iconId = getIconId(currentTemperature)
         mNotificationManager.sendNotification(title, subtitle, iconId)
+
+        currentTemperatureDAO.insertCurrentTemperature(
+                CurrentTemperature(1,
+                        currentTemperature ?: -40.0,
+                        weatherResponse.current?.feels_like ?: -40.0))
     }
 
     private suspend fun getWeather(latitude: Double, longitude: Double) = safeApiCall(
@@ -95,7 +107,7 @@ class UpdateWeatherService : BaseService() {
         return if (temperature != null) {
             try {
                 val iconFormat = if (temperature < 0) "tempn%d" else "temp%d"
-                val iconName = String.format(iconFormat, temperature.toInt())
+                val iconName = String.format(iconFormat, temperature.roundToInt())
                 getIconIdFromResources(iconName, "drawable")
             } catch (e: Exception) {
                 Timber.e(e)

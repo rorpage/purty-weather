@@ -11,8 +11,10 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rorpage.purtyweather.managers.ServiceManager.startUpdateWeatherService
 import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

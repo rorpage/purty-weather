@@ -12,6 +12,5 @@ open class BaseWeatherInfoUnit {
     var visibility = 0
     var wind_speed = 0.0
     var wind_deg = 0
-    @JvmField
     var weather: List<Weather>? = null
 }
