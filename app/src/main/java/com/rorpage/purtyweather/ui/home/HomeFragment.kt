@@ -28,10 +28,11 @@ class HomeFragment : Fragment() {
 
         currentTemperatureDAO.getCurrentTemperature()
                 .observe(viewLifecycleOwner, { currentTemperature ->
-                    temperatureTextView.text = getString(
-                            R.string.temperature,
-                            currentTemperature.temperature.roundToInt()
-                    )
+                    temperatureTextView.text = if (currentTemperature != null) {
+                        getString(R.string.temperature, currentTemperature.temperature.roundToInt())
+                    } else {
+                        "-°"
+                    }
                 })
 
         return root
