@@ -4,17 +4,25 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
-import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rorpage.purtyweather.BuildConfig
 import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
 import com.rorpage.purtyweather.database.entities.CurrentTemperature
 import com.rorpage.purtyweather.managers.NotificationManager
+import com.rorpage.purtyweather.models.ApiError
 import com.rorpage.purtyweather.models.WeatherResponse
-import com.rorpage.purtyweather.util.GsonRequest
+import com.rorpage.purtyweather.network.ApiService
+import com.rorpage.purtyweather.network.ErrorUtils
+import com.rorpage.purtyweather.network.Result
+import com.rorpage.purtyweather.network.ServiceGenerator
+import com.rorpage.purtyweather.network.safeApiCall
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -42,44 +50,57 @@ class UpdateWeatherService : BaseService() {
         fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
                     if (location != null) {
-                        getWeather(location.latitude, location.longitude)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val result = getWeather(location.latitude, location.longitude)
+                            when (result) {
+                                is Result.Success -> handleWeatherResult(result.data)
+                                is Result.Error -> Timber.e(result.exception.message)
+                            }
+                        }
                     }
                 }
     }
 
-    private fun getWeather(latitude: Double, longitude: Double) {
+    private fun handleWeatherResult(weatherResponse: WeatherResponse) {
+        val currentTemperature = weatherResponse.current?.temp
+        val title = String.format(Locale.US,
+                "%.0f\u00B0 and %s. Feels like %.0f\u00B0.",
+                currentTemperature,
+                weatherResponse.current!!.weather!![0].description,
+                weatherResponse.current!!.feels_like)
+        val today = weatherResponse.daily!![0]
+        val subtitle = String.format(Locale.US,
+                "Today: High %.0f\u00B0, low %.0f\u00B0, %s",
+                today.temp?.max,
+                today.temp?.min,
+                today.weather!![0].description)
+        val iconId = getIconId(currentTemperature)
+        mNotificationManager.sendNotification(title, subtitle, iconId)
+
+        currentTemperatureDAO.insertCurrentTemperature(
+                CurrentTemperature(1,
+                        currentTemperature ?: -40.0,
+                        weatherResponse.current?.feels_like ?: -40.0))
+    }
+
+    private suspend fun getWeather(latitude: Double, longitude: Double) = safeApiCall(
+            call = { getWeatherCall(latitude, longitude) },
+            errorMessage = "Error occurred when trying to get weather."
+    )
+
+    private suspend fun getWeatherCall(latitude: Double, longitude: Double): Result<WeatherResponse> {
         Timber.d("getWeather")
-        val queue = Volley.newRequestQueue(applicationContext)
-        val url = String.format(
-                "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&units=%s",
-                latitude.toString(),
-                longitude.toString(),
-                BuildConfig.OWMAPIKEY,
-                "imperial")
-        val weatherResponseGsonRequest = GsonRequest(
-                url, WeatherResponse::class.java, null, { weatherResponse ->
-            val currentTemperature = weatherResponse.current?.temp
-            val title = String.format(Locale.US,
-                    "%.0f\u00B0 and %s. Feels like %.0f\u00B0.",
-                    currentTemperature,
-                    weatherResponse.current!!.weather!![0].description,
-                    weatherResponse.current!!.feels_like)
-            val today = weatherResponse.daily!![0]
-            val subtitle = String.format(Locale.US,
-                    "Today: High %.0f\u00B0, low %.0f\u00B0, %s",
-                    today.temp?.max,
-                    today.temp?.min,
-                    today.weather!![0].description)
-            val iconId = getIconId(currentTemperature)
-            mNotificationManager.sendNotification(title, subtitle, iconId)
-            // TODO: 10/17/20 this is where we should save things to database for now, will change with refactor to retrofit
-            currentTemperatureDAO.insertCurrentTemperature(
-                    CurrentTemperature(1,
-                            currentTemperature ?: -40.0,
-                    weatherResponse.current?.feels_like ?: -40.0))
+
+        val apiService = ServiceGenerator.createService(ApiService::class.java)
+
+        val response = apiService.getWeather(latitude, longitude)
+        if (response.isSuccessful) {
+            return Result.Success(response.body()!!)
         }
-        ) { error -> Timber.e(error) }
-        queue.add(weatherResponseGsonRequest)
+
+        val apiError: ApiError = ErrorUtils.parseError(response)
+        return Result.Error(IOException(apiError.message))
+
     }
 
     private fun getIconId(temperature: Double?): Int {
