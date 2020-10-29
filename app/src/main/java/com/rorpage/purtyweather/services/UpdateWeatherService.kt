@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.rorpage.purtyweather.BuildConfig
 import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
 import com.rorpage.purtyweather.database.entities.CurrentTemperature
 import com.rorpage.purtyweather.managers.NotificationManager
@@ -15,7 +14,6 @@ import com.rorpage.purtyweather.models.WeatherResponse
 import com.rorpage.purtyweather.network.ApiService
 import com.rorpage.purtyweather.network.ErrorUtils
 import com.rorpage.purtyweather.network.Result
-import com.rorpage.purtyweather.network.ServiceGenerator
 import com.rorpage.purtyweather.network.safeApiCall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +28,7 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class UpdateWeatherService : BaseService() {
     @Inject lateinit var currentTemperatureDAO: CurrentTemperatureDAO
+    @Inject lateinit var apiService: ApiService
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
     override fun onCreate() {
@@ -91,14 +90,12 @@ class UpdateWeatherService : BaseService() {
     private suspend fun getWeatherCall(latitude: Double, longitude: Double): Result<WeatherResponse> {
         Timber.d("getWeather")
 
-        val apiService = ServiceGenerator.createService(ApiService::class.java)
-
         val response = apiService.getWeather(latitude, longitude)
         if (response.isSuccessful) {
             return Result.Success(response.body()!!)
         }
 
-        val apiError: ApiError = ErrorUtils.parseError(response)
+        val apiError: ApiError = ErrorUtils(applicationContext).parseError(response)
         return Result.Error(IOException(apiError.message))
 
     }
