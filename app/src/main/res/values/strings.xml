@@ -6,4 +6,5 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="temperature">%d˚</string>
+    <string name="feels_like">Feels Like</string>
 </resources>

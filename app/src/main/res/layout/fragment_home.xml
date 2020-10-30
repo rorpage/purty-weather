@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/temperature"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="100dp"
@@ -28,5 +28,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todays_date"
         tools:ignore="SpUsage" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/feelsLikeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/temperature"
+        app:layout_constraintStart_toStartOf="@id/temperature"
+        app:layout_constraintEnd_toStartOf="@id/feelsLikeTemperature"
+        android:text="@string/feels_like"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginEnd="4dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/feelsLikeTemperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/temperature"
+        app:layout_constraintEnd_toEndOf="@id/temperature"
+        app:layout_constraintStart_toEndOf="@id/feelsLikeLabel"
+        android:layout_marginStart="4dp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
