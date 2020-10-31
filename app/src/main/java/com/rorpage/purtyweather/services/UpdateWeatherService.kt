@@ -66,7 +66,7 @@ class UpdateWeatherService : BaseService() {
                 "%.0f\u00B0 and %s. Feels like %.0f\u00B0.",
                 currentTemperature,
                 weatherResponse.current!!.weather!![0].description,
-                weatherResponse.current!!.feels_like)
+                weatherResponse.current!!.feelsLike)
         val today = weatherResponse.daily!![0]
         val subtitle = String.format(Locale.US,
                 "Today: High %.0f\u00B0, low %.0f\u00B0, %s",
@@ -79,7 +79,9 @@ class UpdateWeatherService : BaseService() {
         currentTemperatureDAO.insertCurrentTemperature(
                 CurrentTemperature(1,
                         currentTemperature ?: -40.0,
-                        weatherResponse.current?.feels_like ?: -40.0))
+                        weatherResponse.current?.feelsLike ?: -40.0))
+
+
     }
 
     private suspend fun getWeather(latitude: Double, longitude: Double) = safeApiCall(

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rorpage.purtyweather.R
@@ -23,6 +24,7 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val dateTextView = root.findViewById<TextView>(R.id.todays_date)
         val temperatureTextView = root.findViewById<TextView>(R.id.temperature)
+        val feelsLikeTemperatureTextView = root.findViewById<AppCompatTextView>(R.id.feelsLikeTemperature)
         homeViewModel.dateLiveData.observe(viewLifecycleOwner, { s -> dateTextView.text = s })
         homeViewModel.temperatureLiveData.observe(viewLifecycleOwner, { s -> temperatureTextView.text = s })
 
@@ -30,9 +32,11 @@ class HomeFragment : Fragment() {
                 .observe(viewLifecycleOwner, { currentTemperature ->
                     temperatureTextView.text = if (currentTemperature != null) {
                         getString(R.string.temperature, currentTemperature.temperature.roundToInt())
-                    } else {
-                        "-°"
-                    }
+                    } else { "-°" }
+
+                    feelsLikeTemperatureTextView.text = if (currentTemperature != null) {
+                        getString(R.string.temperature, currentTemperature.feelsLike.roundToInt())
+                    } else { "-°" }
                 })
 
         return root
