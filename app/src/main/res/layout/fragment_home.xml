@@ -17,6 +17,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/currentWeatherIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/temperature"
+        app:layout_constraintBottom_toBottomOf="@id/temperature"
+        app:layout_constraintTop_toTopOf="@id/temperature"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/temperature"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/temperature"
+        app:layout_constraintBottom_toBottomOf="@id/temperature"/>
+
     <TextView
         android:id="@+id/temperature"
         android:layout_width="wrap_content"
@@ -28,6 +46,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todays_date"
         tools:ignore="SpUsage" />
+
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/feelsLikeLabel"

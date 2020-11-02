@@ -3,7 +3,8 @@ package com.rorpage.purtyweather.di
 import android.content.Context
 import androidx.room.Room
 import com.rorpage.purtyweather.database.AppDatabase
-import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
+import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.database.daos.WeatherDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +16,13 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule {
     @Provides
-    fun provideCurrentTemperatureDAO(appDatabase: AppDatabase): CurrentTemperatureDAO {
-        return appDatabase.currentTemperatureDAO()
+    fun provideCurrentWeatherDAO(appDatabase: AppDatabase): CurrentWeatherDAO {
+        return appDatabase.currentWeatherDAO()
+    }
+
+    @Provides
+    fun provideWeatherDAO(appDatabase: AppDatabase): WeatherDAO {
+        return appDatabase.weatherDAO()
     }
 
     @Provides

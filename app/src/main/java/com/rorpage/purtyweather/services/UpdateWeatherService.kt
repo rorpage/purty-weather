@@ -6,8 +6,10 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
-import com.rorpage.purtyweather.database.entities.CurrentTemperature
+import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.database.daos.WeatherDAO
+import com.rorpage.purtyweather.database.entities.CurrentWeather
+import com.rorpage.purtyweather.database.entities.WeatherEntity
 import com.rorpage.purtyweather.managers.NotificationManager
 import com.rorpage.purtyweather.models.ApiError
 import com.rorpage.purtyweather.models.WeatherResponse
@@ -15,19 +17,20 @@ import com.rorpage.purtyweather.network.ApiService
 import com.rorpage.purtyweather.network.ErrorUtils
 import com.rorpage.purtyweather.network.Result
 import com.rorpage.purtyweather.network.safeApiCall
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.IOException
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class UpdateWeatherService : BaseService() {
-    @Inject lateinit var currentTemperatureDAO: CurrentTemperatureDAO
+    @Inject lateinit var currentWeatherDAO: CurrentWeatherDAO
+    @Inject lateinit var weatherDAO: WeatherDAO
     @Inject lateinit var apiService: ApiService
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
@@ -76,10 +79,31 @@ class UpdateWeatherService : BaseService() {
         val iconId = getIconId(currentTemperature)
         mNotificationManager.sendNotification(title, subtitle, iconId)
 
-        currentTemperatureDAO.insertCurrentTemperature(
-                CurrentTemperature(1,
+        val weatherEntityList = ArrayList<WeatherEntity>()
+        val weatherEntityCounter = 0
+        weatherResponse.current?.weather?.forEach {
+            val weatherEntity = WeatherEntity(weatherEntityCounter.inc(), 1, it.id, it.main ?: "", it.description ?: "", it.icon ?: "01d")
+            weatherEntityList.add(weatherEntity)
+        }
+
+        weatherDAO.insertWeatherList(weatherEntityList)
+
+        currentWeatherDAO.insertCurrentTemperature(
+                CurrentWeather(1,
                         currentTemperature ?: -40.0,
-                        weatherResponse.current?.feelsLike ?: -40.0))
+                        weatherResponse.current?.feelsLike ?: -40.0,
+                        weatherResponse.current?.dt ?: 0,
+                        weatherResponse.current?.sunrise ?: 0,
+                        weatherResponse.current?.sunset ?: 0,
+                        weatherResponse.current?.pressure ?: 0,
+                        weatherResponse.current?.humidity ?: 0,
+                        weatherResponse.current?.dewPoint ?: 0.0,
+                        weatherResponse.current?.uvi ?: 0.0,
+                        weatherResponse.current?.clouds ?: 0,
+                        weatherResponse.current?.visibility ?: 0,
+                        weatherResponse.current?.windSpeed ?: 0.0,
+                        weatherResponse.current?.windDeg ?: 0
+                ))
 
 
     }

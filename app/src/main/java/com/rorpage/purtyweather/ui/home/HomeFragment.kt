@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rorpage.purtyweather.R
-import com.rorpage.purtyweather.database.daos.CurrentTemperatureDAO
+import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.util.WeatherIconsUtil
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -17,7 +19,7 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    @Inject lateinit var currentTemperatureDAO: CurrentTemperatureDAO
+    @Inject lateinit var currentWeatherDAO: CurrentWeatherDAO
     private val homeViewModel: HomeViewModel by viewModels()
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -25,18 +27,27 @@ class HomeFragment : Fragment() {
         val dateTextView = root.findViewById<TextView>(R.id.todays_date)
         val temperatureTextView = root.findViewById<TextView>(R.id.temperature)
         val feelsLikeTemperatureTextView = root.findViewById<AppCompatTextView>(R.id.feelsLikeTemperature)
+        val currentWeatherIcon = root.findViewById<AppCompatImageView>(R.id.currentWeatherIcon)
+        val description = root.findViewById<AppCompatTextView>(R.id.description)
+
         homeViewModel.dateLiveData.observe(viewLifecycleOwner, { s -> dateTextView.text = s })
         homeViewModel.temperatureLiveData.observe(viewLifecycleOwner, { s -> temperatureTextView.text = s })
 
-        currentTemperatureDAO.getCurrentTemperature()
-                .observe(viewLifecycleOwner, { currentTemperature ->
-                    temperatureTextView.text = if (currentTemperature != null) {
-                        getString(R.string.temperature, currentTemperature.temperature.roundToInt())
+        // TODO: We should eventually move database calls into a repository and then call into it inside the HomeViewModel
+        currentWeatherDAO.getCurrentWeatherWithWeatherList()
+                .observe(viewLifecycleOwner, { currentWeatherWithWeatherList ->
+                    temperatureTextView.text = if (currentWeatherWithWeatherList != null) {
+                        getString(R.string.temperature, currentWeatherWithWeatherList.currentWeather.temperature.roundToInt())
                     } else { "-°" }
 
-                    feelsLikeTemperatureTextView.text = if (currentTemperature != null) {
-                        getString(R.string.temperature, currentTemperature.feelsLike.roundToInt())
+                    feelsLikeTemperatureTextView.text = if (currentWeatherWithWeatherList != null) {
+                        getString(R.string.temperature, currentWeatherWithWeatherList.currentWeather.feelsLike.roundToInt())
                     } else { "-°" }
+
+                    if (currentWeatherWithWeatherList != null && currentWeatherWithWeatherList.weatherList.isNotEmpty()) {
+                        currentWeatherIcon.setImageDrawable(context?.let { WeatherIconsUtil(it).getIcon(currentWeatherWithWeatherList.weatherList.first().icon) })
+                        description.text = currentWeatherWithWeatherList.weatherList.first().description
+                    }
                 })
 
         return root
@@ -45,7 +56,7 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         homeViewModel.dateLiveData.removeObservers(viewLifecycleOwner)
         homeViewModel.temperatureLiveData.removeObservers(viewLifecycleOwner)
-        currentTemperatureDAO.getCurrentTemperature().removeObservers(viewLifecycleOwner)
+        currentWeatherDAO.getCurrentWeather().removeObservers(viewLifecycleOwner)
         super.onDestroyView()
     }
 }
