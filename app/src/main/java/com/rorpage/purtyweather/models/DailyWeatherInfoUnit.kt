@@ -1,6 +1,9 @@
 package com.rorpage.purtyweather.models
 
+import com.google.gson.annotations.SerializedName
+
 class DailyWeatherInfoUnit : BaseWeatherInfoUnit() {
     var temp: Temperature? = null
-    var feels_like: BaseTemperature? = null
+    @SerializedName("feels_like")
+    var feelsLike: BaseTemperature? = null
 }
