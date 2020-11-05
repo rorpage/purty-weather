@@ -7,8 +7,12 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.database.daos.HourlyDAO
+import com.rorpage.purtyweather.database.daos.HourlyWeatherDAO
 import com.rorpage.purtyweather.database.daos.WeatherDAO
 import com.rorpage.purtyweather.database.entities.CurrentWeather
+import com.rorpage.purtyweather.database.entities.HourlyEntity
+import com.rorpage.purtyweather.database.entities.HourlyWeatherEntity
 import com.rorpage.purtyweather.database.entities.WeatherEntity
 import com.rorpage.purtyweather.managers.NotificationManager
 import com.rorpage.purtyweather.models.ApiError
@@ -31,6 +35,8 @@ import kotlin.math.roundToInt
 class UpdateWeatherService : BaseService() {
     @Inject lateinit var currentWeatherDAO: CurrentWeatherDAO
     @Inject lateinit var weatherDAO: WeatherDAO
+    @Inject lateinit var hourlyDAO: HourlyDAO
+    @Inject lateinit var hourlyWeatherDAO: HourlyWeatherDAO
     @Inject lateinit var apiService: ApiService
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
@@ -105,7 +111,24 @@ class UpdateWeatherService : BaseService() {
                         weatherResponse.current?.windDeg ?: 0
                 ))
 
+        val hourlyId: Int = 0
+        weatherResponse.hourly?.forEach {
+            val hourlyEntity = HourlyEntity(hourlyId.inc(), it.temp,
+                    it.feelsLike, it.dt, it.sunrise, it.sunset, it.pressure,
+                    it.humidity, it.dewPoint, it.uvi, it.clouds, it.visibility,
+                    it.windSpeed, it.windDeg)
 
+            val hourlyWeatherEntityList = ArrayList<HourlyWeatherEntity>()
+            val hourlyWeatherEntityCounter = 0
+            it.weather?.forEach {
+                hourlyWeatherEntityList.add(HourlyWeatherEntity(hourlyWeatherEntityCounter.inc(),
+                        hourlyId, it.id, it.main ?: "",
+                        it.description ?: "", it.icon ?: "01d"))
+            }
+
+            hourlyDAO.insertHourly(hourlyEntity)
+            hourlyWeatherDAO.insertHourlyWeatherList(hourlyWeatherEntityList)
+        }
     }
 
     private suspend fun getWeather(latitude: Double, longitude: Double) = safeApiCall(

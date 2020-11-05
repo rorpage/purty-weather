@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.rorpage.purtyweather.database.AppDatabase
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.database.daos.HourlyDAO
+import com.rorpage.purtyweather.database.daos.HourlyWeatherDAO
 import com.rorpage.purtyweather.database.daos.WeatherDAO
 import dagger.Module
 import dagger.Provides
@@ -23,6 +25,16 @@ class DatabaseModule {
     @Provides
     fun provideWeatherDAO(appDatabase: AppDatabase): WeatherDAO {
         return appDatabase.weatherDAO()
+    }
+
+    @Provides
+    fun provideHourlyDAO(appDatabase: AppDatabase): HourlyDAO {
+        return appDatabase.hourlyDAO()
+    }
+
+    @Provides
+    fun provideHourlyWeatherDAO(appDatabase: AppDatabase): HourlyWeatherDAO {
+        return appDatabase.hourlyWeatherDAO()
     }
 
     @Provides
