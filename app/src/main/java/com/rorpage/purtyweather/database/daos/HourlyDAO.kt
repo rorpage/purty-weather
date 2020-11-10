@@ -19,7 +19,10 @@ interface HourlyDAO {
     fun insertHourly(hourlyEntity: HourlyEntity)
 
     @Transaction
-    @Query("SELECT * FROM HourlyEntity")
+    @Query("SELECT * FROM HourlyEntity ORDER BY dt ASC")
     fun getHourlyWeatherWithWeatherList(): LiveData<List<HourlyWeatherWithWeatherList>>
+
+    @Query("DELETE FROM HourlyEntity")
+    fun deleteAll()
 
 }

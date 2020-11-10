@@ -17,4 +17,7 @@ interface WeatherDAO {
 
     @Query("SELECT * FROM WeatherEntity")
     fun loadAllWeather(): List<WeatherEntity>
+
+    @Query("DELETE FROM WeatherEntity")
+    fun deleteAll()
 }

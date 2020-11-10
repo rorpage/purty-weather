@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "672b57fb96828b6ba632d315315f40cc",
+    "identityHash": "b2e60c71ec6152f9b07ca5a61ea4d119",
     "entities": [
       {
         "tableName": "CurrentWeather",
@@ -154,11 +154,11 @@
       },
       {
         "tableName": "HourlyEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `temperature` REAL NOT NULL, `feelsLike` REAL NOT NULL, `dt` INTEGER NOT NULL, `sunrise` INTEGER NOT NULL, `sunset` INTEGER NOT NULL, `pressure` INTEGER NOT NULL, `humidity` INTEGER NOT NULL, `dewPoint` REAL NOT NULL, `uvi` REAL NOT NULL, `clouds` INTEGER NOT NULL, `visibility` INTEGER NOT NULL, `windSpeed` REAL NOT NULL, `windDeg` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`hourlyId` INTEGER NOT NULL, `temperature` REAL NOT NULL, `feelsLike` REAL NOT NULL, `dt` INTEGER NOT NULL, `sunrise` INTEGER NOT NULL, `sunset` INTEGER NOT NULL, `pressure` INTEGER NOT NULL, `humidity` INTEGER NOT NULL, `dewPoint` REAL NOT NULL, `uvi` REAL NOT NULL, `clouds` INTEGER NOT NULL, `visibility` INTEGER NOT NULL, `windSpeed` REAL NOT NULL, `windDeg` INTEGER NOT NULL, PRIMARY KEY(`hourlyId`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "hourlyId",
+            "columnName": "hourlyId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -243,7 +243,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "hourlyId"
           ],
           "autoGenerate": false
         },
@@ -304,7 +304,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '672b57fb96828b6ba632d315315f40cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b2e60c71ec6152f9b07ca5a61ea4d119')"
     ]
   }
 }

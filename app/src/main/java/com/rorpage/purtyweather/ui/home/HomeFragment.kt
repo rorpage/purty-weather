@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
@@ -14,6 +11,7 @@ import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.adapter.HourlyForecastAdapter
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
 import com.rorpage.purtyweather.database.daos.HourlyDAO
+import com.rorpage.purtyweather.database.entities.HourlyWeatherWithWeatherList
 import com.rorpage.purtyweather.util.WeatherIconsUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.view.currentWeatherIcon
@@ -23,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_home.view.hourlyTabLayout
 import kotlinx.android.synthetic.main.fragment_home.view.hourlyViewPager
 import kotlinx.android.synthetic.main.fragment_home.view.temperature
 import kotlinx.android.synthetic.main.fragment_home.view.todays_date
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -56,13 +55,20 @@ class HomeFragment : Fragment() {
                     }
                 })
 
-        root.hourlyViewPager.adapter = HourlyForecastAdapter()
-        TabLayoutMediator(root.hourlyTabLayout, root.hourlyViewPager) {tab, position ->
-        }.attach()
-
         hourlyDAO.getHourlyWeatherWithWeatherList()
                 .observe(viewLifecycleOwner, { hourlyWeatherList ->
 
+                    Timber.v("List Size: ${hourlyWeatherList.size}" )
+                    if (hourlyWeatherList.size >= 16) {
+                        val reducedHourlyWeatherList = ArrayList<List<HourlyWeatherWithWeatherList>>()
+
+                        reducedHourlyWeatherList.add(hourlyWeatherList.subList(0, 8))
+                        reducedHourlyWeatherList.add(hourlyWeatherList.subList(8, 16))
+
+                        root.hourlyViewPager.adapter = HourlyForecastAdapter(reducedHourlyWeatherList)
+                        TabLayoutMediator(root.hourlyTabLayout, root.hourlyViewPager) { tab, position ->
+                        }.attach()
+                    }
                 })
 
         return root

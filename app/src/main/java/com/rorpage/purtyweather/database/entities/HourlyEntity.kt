@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class HourlyEntity(
     @PrimaryKey
-    val id: Int,
+    val hourlyId: Int,
     val temperature: Double,
     val feelsLike: Double,
     val dt: Long,

@@ -6,7 +6,7 @@ import androidx.room.Relation
 data class HourlyWeatherWithWeatherList(
     @Embedded val hourlyEntity: HourlyEntity,
     @Relation(
-            parentColumn = "id",
+            parentColumn = "hourlyId",
             entityColumn = "hourlyWeatherId"
     )
     val hourlyWeatherList: List<HourlyWeatherEntity>

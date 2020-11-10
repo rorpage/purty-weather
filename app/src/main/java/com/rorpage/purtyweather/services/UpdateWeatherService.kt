@@ -85,10 +85,12 @@ class UpdateWeatherService : BaseService() {
         val iconId = getIconId(currentTemperature)
         mNotificationManager.sendNotification(title, subtitle, iconId)
 
+        purgeDB()
+
         val weatherEntityList = ArrayList<WeatherEntity>()
-        val weatherEntityCounter = 0
+        var weatherEntityCounter = 0
         weatherResponse.current?.weather?.forEach {
-            val weatherEntity = WeatherEntity(weatherEntityCounter.inc(), 1, it.id, it.main ?: "", it.description ?: "", it.icon ?: "01d")
+            val weatherEntity = WeatherEntity(weatherEntityCounter++, 1, it.id, it.main ?: "", it.description ?: "", it.icon ?: "01d")
             weatherEntityList.add(weatherEntity)
         }
 
@@ -111,18 +113,20 @@ class UpdateWeatherService : BaseService() {
                         weatherResponse.current?.windDeg ?: 0
                 ))
 
-        val hourlyId: Int = 0
-        weatherResponse.hourly?.forEach {
-            val hourlyEntity = HourlyEntity(hourlyId.inc(), it.temp,
-                    it.feelsLike, it.dt, it.sunrise, it.sunset, it.pressure,
-                    it.humidity, it.dewPoint, it.uvi, it.clouds, it.visibility,
-                    it.windSpeed, it.windDeg)
+        var hourlyId = 1
+        var hourlyWeatherEntityCounter = 1
+        weatherResponse.hourly?.forEach { weatherInfoUnit ->
+            Timber.v("Saving hourly entity with id: ${hourlyId + 1}")
+            val hourlyEntity = HourlyEntity(hourlyId++, weatherInfoUnit.temp,
+                    weatherInfoUnit.feelsLike, weatherInfoUnit.dt, weatherInfoUnit.sunrise, weatherInfoUnit.sunset, weatherInfoUnit.pressure,
+                    weatherInfoUnit.humidity, weatherInfoUnit.dewPoint, weatherInfoUnit.uvi, weatherInfoUnit.clouds, weatherInfoUnit.visibility,
+                    weatherInfoUnit.windSpeed, weatherInfoUnit.windDeg)
 
             val hourlyWeatherEntityList = ArrayList<HourlyWeatherEntity>()
-            val hourlyWeatherEntityCounter = 0
-            it.weather?.forEach {
-                hourlyWeatherEntityList.add(HourlyWeatherEntity(hourlyWeatherEntityCounter.inc(),
-                        hourlyId, it.id, it.main ?: "",
+            weatherInfoUnit.weather?.forEach {
+                Timber.v("Saving hourly weather entity with id: ${hourlyWeatherEntityCounter + 1} and hourly id: $hourlyId")
+                hourlyWeatherEntityList.add(HourlyWeatherEntity(hourlyWeatherEntityCounter++,
+                        hourlyId - 1, it.id, it.main ?: "",
                         it.description ?: "", it.icon ?: "01d"))
             }
 
@@ -166,5 +170,12 @@ class UpdateWeatherService : BaseService() {
 
     private fun getIconIdFromResources(name: String, defType: String): Int {
         return resources.getIdentifier(name, defType, packageName)
+    }
+
+    private fun purgeDB() {
+        currentWeatherDAO.deleteAll()
+        hourlyDAO.deleteAll()
+        hourlyWeatherDAO.deleteAll()
+        weatherDAO.deleteAll()
     }
 }
