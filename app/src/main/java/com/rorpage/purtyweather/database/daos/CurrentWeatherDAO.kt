@@ -21,4 +21,8 @@ interface CurrentWeatherDAO {
     @Transaction
     @Query("SELECT * FROM CurrentWeather WHERE id = 1")
     fun getCurrentWeatherWithWeatherList(): LiveData<CurrentWeatherWithWeatherList>
+
+    @Query("DELETE FROM CurrentWeather")
+    fun deleteAll()
+
 }

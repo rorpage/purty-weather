@@ -7,8 +7,12 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.database.daos.HourlyDAO
+import com.rorpage.purtyweather.database.daos.HourlyWeatherDAO
 import com.rorpage.purtyweather.database.daos.WeatherDAO
 import com.rorpage.purtyweather.database.entities.CurrentWeather
+import com.rorpage.purtyweather.database.entities.HourlyEntity
+import com.rorpage.purtyweather.database.entities.HourlyWeatherEntity
 import com.rorpage.purtyweather.database.entities.WeatherEntity
 import com.rorpage.purtyweather.managers.NotificationManager
 import com.rorpage.purtyweather.models.ApiError
@@ -31,6 +35,8 @@ import kotlin.math.roundToInt
 class UpdateWeatherService : BaseService() {
     @Inject lateinit var currentWeatherDAO: CurrentWeatherDAO
     @Inject lateinit var weatherDAO: WeatherDAO
+    @Inject lateinit var hourlyDAO: HourlyDAO
+    @Inject lateinit var hourlyWeatherDAO: HourlyWeatherDAO
     @Inject lateinit var apiService: ApiService
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
@@ -79,10 +85,12 @@ class UpdateWeatherService : BaseService() {
         val iconId = getIconId(currentTemperature)
         mNotificationManager.sendNotification(title, subtitle, iconId)
 
+        purgeDB()
+
         val weatherEntityList = ArrayList<WeatherEntity>()
-        val weatherEntityCounter = 0
+        var weatherEntityCounter = 0
         weatherResponse.current?.weather?.forEach {
-            val weatherEntity = WeatherEntity(weatherEntityCounter.inc(), 1, it.id, it.main ?: "", it.description ?: "", it.icon ?: "01d")
+            val weatherEntity = WeatherEntity(weatherEntityCounter++, 1, it.id, it.main ?: "", it.description ?: "", it.icon ?: "01d")
             weatherEntityList.add(weatherEntity)
         }
 
@@ -105,7 +113,26 @@ class UpdateWeatherService : BaseService() {
                         weatherResponse.current?.windDeg ?: 0
                 ))
 
+        var hourlyId = 1
+        var hourlyWeatherEntityCounter = 1
+        weatherResponse.hourly?.forEach { weatherInfoUnit ->
+            Timber.v("Saving hourly entity with id: ${hourlyId + 1}")
+            val hourlyEntity = HourlyEntity(hourlyId++, weatherInfoUnit.temp,
+                    weatherInfoUnit.feelsLike, weatherInfoUnit.dt, weatherInfoUnit.sunrise, weatherInfoUnit.sunset, weatherInfoUnit.pressure,
+                    weatherInfoUnit.humidity, weatherInfoUnit.dewPoint, weatherInfoUnit.uvi, weatherInfoUnit.clouds, weatherInfoUnit.visibility,
+                    weatherInfoUnit.windSpeed, weatherInfoUnit.windDeg)
 
+            val hourlyWeatherEntityList = ArrayList<HourlyWeatherEntity>()
+            weatherInfoUnit.weather?.forEach {
+                Timber.v("Saving hourly weather entity with id: ${hourlyWeatherEntityCounter + 1} and hourly id: $hourlyId")
+                hourlyWeatherEntityList.add(HourlyWeatherEntity(hourlyWeatherEntityCounter++,
+                        hourlyId - 1, it.id, it.main ?: "",
+                        it.description ?: "", it.icon ?: "01d"))
+            }
+
+            hourlyDAO.insertHourly(hourlyEntity)
+            hourlyWeatherDAO.insertHourlyWeatherList(hourlyWeatherEntityList)
+        }
     }
 
     private suspend fun getWeather(latitude: Double, longitude: Double) = safeApiCall(
@@ -143,5 +170,12 @@ class UpdateWeatherService : BaseService() {
 
     private fun getIconIdFromResources(name: String, defType: String): Int {
         return resources.getIdentifier(name, defType, packageName)
+    }
+
+    private fun purgeDB() {
+        currentWeatherDAO.deleteAll()
+        hourlyDAO.deleteAll()
+        hourlyWeatherDAO.deleteAll()
+        weatherDAO.deleteAll()
     }
 }

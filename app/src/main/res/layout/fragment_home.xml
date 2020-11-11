@@ -69,6 +69,31 @@
         app:layout_constraintStart_toEndOf="@id/feelsLikeLabel"
         android:layout_marginStart="4dp" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llHourly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feelsLikeLabel"
+        android:layout_marginTop="20dp">
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/hourlyViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/hourlyTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tabBackground="@drawable/selector_tab_indicator_dot"
+            app:tabGravity="center"
+            app:tabIndicator="@null"
+            app:tabPaddingStart="6dp"
+            app:tabPaddingEnd="6dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
