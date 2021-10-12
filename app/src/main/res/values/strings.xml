@@ -8,4 +8,5 @@
     <string name="temperature">%d˚</string>
     <string name="feels_like">Feels Like</string>
     <string name="hi_temp">Hi: %d˚</string>
+    <string name="title_activity_compose">ComposeActivity</string>
 </resources>
