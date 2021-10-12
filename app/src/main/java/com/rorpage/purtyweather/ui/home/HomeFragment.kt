@@ -1,5 +1,6 @@
 package com.rorpage.purtyweather.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
+import com.rorpage.purtyweather.ComposeActivity
 import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.adapter.HourlyForecastAdapter
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
@@ -14,6 +16,7 @@ import com.rorpage.purtyweather.database.daos.HourlyDAO
 import com.rorpage.purtyweather.database.entities.HourlyWeatherWithWeatherList
 import com.rorpage.purtyweather.util.WeatherIconsUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_home.view.buttonComposeActivity
 import kotlinx.android.synthetic.main.fragment_home.view.currentWeatherIcon
 import kotlinx.android.synthetic.main.fragment_home.view.description
 import kotlinx.android.synthetic.main.fragment_home.view.feelsLikeTemperature
@@ -70,6 +73,12 @@ class HomeFragment : Fragment() {
                         }.attach()
                     }
                 })
+
+        root.buttonComposeActivity.setOnClickListener {
+            val intent = Intent(this.context, ComposeActivity::class.java)
+
+            startActivity(intent)
+        }
 
         return root
     }
