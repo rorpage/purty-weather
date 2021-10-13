@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(val currentWeatherDAO: CurrentWeatherDAO
     val temperatureLiveData: LiveData<String>
         get() = temperatureText
 
-    private val localDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    val localDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
 
     init {
         dateText.value = LocalDate.now().format(localDateFormatter)
