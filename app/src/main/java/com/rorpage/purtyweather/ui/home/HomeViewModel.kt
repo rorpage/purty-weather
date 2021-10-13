@@ -3,11 +3,19 @@ package com.rorpage.purtyweather.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
+import com.rorpage.purtyweather.database.daos.HourlyDAO
+import com.rorpage.purtyweather.database.entities.CurrentWeatherWithWeatherList
+import com.rorpage.purtyweather.database.entities.HourlyWeatherWithWeatherList
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(val currentWeatherDAO: CurrentWeatherDAO, val hourlyDAO: HourlyDAO) : ViewModel() {
+
     private val dateText: MutableLiveData<String> = MutableLiveData()
     val dateLiveData: LiveData<String>
         get() = dateText
@@ -21,5 +29,13 @@ class HomeViewModel : ViewModel() {
     init {
         dateText.value = LocalDate.now().format(localDateFormatter)
         temperatureText.value = "-°"
+    }
+
+    fun getCurrentWeather(): LiveData<CurrentWeatherWithWeatherList> {
+        return currentWeatherDAO.getCurrentWeatherWithWeatherList()
+    }
+
+    fun getHourlyWeather(): LiveData<List<HourlyWeatherWithWeatherList>> {
+        return hourlyDAO.getHourlyWeatherWithWeatherList()
     }
 }
