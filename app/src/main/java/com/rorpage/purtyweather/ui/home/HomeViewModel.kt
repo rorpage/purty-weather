@@ -9,8 +9,10 @@ import com.rorpage.purtyweather.database.entities.CurrentWeatherWithWeatherList
 import com.rorpage.purtyweather.database.entities.HourlyWeatherWithWeatherList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +27,9 @@ class HomeViewModel @Inject constructor(val currentWeatherDAO: CurrentWeatherDAO
         get() = temperatureText
 
     val localDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    val hourlyFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("ha")
+        .withLocale(Locale.US)
+        .withZone(ZoneId.systemDefault())
 
     init {
         dateText.value = LocalDate.now().format(localDateFormatter)

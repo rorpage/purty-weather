@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
@@ -31,6 +32,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
+@ExperimentalPagerApi
 @AndroidEntryPoint
 class UpdateWeatherService : BaseService() {
     @Inject lateinit var currentWeatherDAO: CurrentWeatherDAO
