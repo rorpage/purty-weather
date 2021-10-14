@@ -4,9 +4,11 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.rorpage.purtyweather.services.PurtyWeatherService
 
 object WeatherUpdateScheduler {
+    @ExperimentalPagerApi
     @JvmStatic
     @JvmOverloads
     fun scheduleJob(context: Context, minimumLatencyMinutes: Int = 15) {

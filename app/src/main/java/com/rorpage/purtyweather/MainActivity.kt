@@ -8,12 +8,14 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rorpage.purtyweather.managers.ServiceManager.startUpdateWeatherService
 import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
+@ExperimentalPagerApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

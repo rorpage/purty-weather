@@ -8,9 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.rorpage.purtyweather.MainActivity
 import com.rorpage.purtyweather.R
 
+@ExperimentalPagerApi
 class NotificationManager(private val mContext: Context) {
     private val mNotificationManager: NotificationManager =
             mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

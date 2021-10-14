@@ -2,6 +2,7 @@ package com.rorpage.purtyweather.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -22,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.ui.home.HomeScreen
 import com.rorpage.purtyweather.ui.home.HomeViewModel
@@ -39,6 +41,7 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
 
 val screens = listOf(Screen.Home)
 
+@ExperimentalPagerApi
 @Composable
 fun PurtyWeatherApp() {
     PurtyWeatherTheme {
@@ -76,8 +79,8 @@ fun PurtyWeatherApp() {
                     }
                 }
             }
-        ) {
-           NavHost(navController = navController, startDestination = Screen.Home.route) {
+        ) { innerPadding ->
+           NavHost(navController = navController, startDestination = Screen.Home.route, modifier = Modifier.padding(innerPadding)) {
                composable(Screen.Home.route) {
                    val homeViewModel = hiltViewModel<HomeViewModel>()
                    HomeScreen(homeViewModel)

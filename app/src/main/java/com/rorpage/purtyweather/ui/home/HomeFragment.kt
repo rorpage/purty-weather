@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rorpage.purtyweather.ComposeActivity
 import com.rorpage.purtyweather.R
@@ -28,6 +29,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
+@ExperimentalPagerApi
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
