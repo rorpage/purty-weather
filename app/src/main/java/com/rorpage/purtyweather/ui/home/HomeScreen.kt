@@ -52,11 +52,11 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             .fillMaxHeight(1f)) {
         Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .fillMaxHeight(.3f)
-                        .fillMaxWidth(1f),
+                        .fillMaxHeight(.4f)
+                        .fillMaxWidth(1f)
+                        .padding(bottom = 10.dp),
         ) {
             Greeting("Purty Person")
             Text(currentDate,
@@ -75,14 +75,10 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 )
                 Text("${currentTempToDisplay(currentWeatherWithWeatherList?.currentWeather)}°",
                         style = TextStyle(
-                                fontSize = 100.sp, fontWeight = FontWeight.Bold))  // TODO: 10/18/21 fix size of this text https://stackoverflow.com/questions/65893939/how-to-convert-textunit-to-dp-in-jetpack-compose
+                                fontSize = 100.sp, fontWeight = FontWeight.Bold))  // TODO: 10/18/21 make text size not scale https://stackoverflow.com/questions/65893939/how-to-convert-textunit-to-dp-in-jetpack-compose
 
                 Text(currentWeatherWithWeatherList?.weatherList?.first()?.description ?: "-")
             }
-        }
-        Column(Modifier
-                .fillMaxWidth(1f)
-                .fillMaxHeight(.5f)) {
         }
 
         val pagerState = rememberPagerState()
