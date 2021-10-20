@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -51,18 +52,16 @@ class NotificationManager(private val mContext: Context) {
         private get() {
             val intent = Intent(mContext, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            return PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            return PendingIntent.getActivity(mContext, 0, intent, FLAG_IMMUTABLE)
         }
 
     private fun buildNotificationChannelIfNeeded() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(PRIMARY_CHANNEL,
-                    mContext.getString(R.string.notification_channel_default),
-                    NotificationManager.IMPORTANCE_LOW)
-            channel.setShowBadge(false)
-            channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            mNotificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(PRIMARY_CHANNEL,
+                mContext.getString(R.string.notification_channel_default),
+                NotificationManager.IMPORTANCE_LOW)
+        channel.setShowBadge(false)
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        mNotificationManager.createNotificationChannel(channel)
     }
 
     companion object {
