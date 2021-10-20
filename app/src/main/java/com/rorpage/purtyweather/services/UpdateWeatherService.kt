@@ -46,12 +46,12 @@ class UpdateWeatherService : BaseService() {
         super.onCreate()
         mNotificationManager = NotificationManager(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        startForeground(NotificationManager.NOTIFICATION_ID,
+            mNotificationManager.sendNotification("Loading..."))
     }
 
     override fun onHandleIntent(intent: Intent?) {
         super.onHandleIntent(intent)
-        startForeground(NotificationManager.NOTIFICATION_ID,
-                mNotificationManager.sendNotification("Loading..."))
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Timber.e("Location permission not granted")
