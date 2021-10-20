@@ -56,7 +56,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 modifier = Modifier
                         .fillMaxHeight(.4f)
                         .fillMaxWidth(1f)
-                        .padding(bottom = 10.dp),
+                        .padding(bottom = 20.dp),
         ) {
             Greeting("Purty Person")
             Text(currentDate,
@@ -79,6 +79,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
                 Text(currentWeatherWithWeatherList?.weatherList?.first()?.description ?: "-")
             }
+            Text("Feels like ${feelsLikeTempToDisplay(currentWeatherWithWeatherList?.currentWeather)}°")
         }
 
         val pagerState = rememberPagerState()
@@ -120,10 +121,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                         .align(Alignment.CenterHorizontally)
                         .padding(16.dp)
             )
-            
-
         }
-
     }
 }
 
@@ -155,4 +153,8 @@ fun DefaultPreview() {
 
 private fun currentTempToDisplay(currentWeather: CurrentWeather?): String {
     return currentWeather?.temperature?.roundToInt()?.toString() ?: "-"
+}
+
+private fun feelsLikeTempToDisplay(currentWeather: CurrentWeather?): String {
+    return currentWeather?.feelsLike?.roundToInt()?.toString() ?: "-"
 }
