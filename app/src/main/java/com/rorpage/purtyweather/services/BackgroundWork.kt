@@ -1,11 +1,18 @@
 package com.rorpage.purtyweather.services
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
 import com.rorpage.purtyweather.database.daos.HourlyDAO
@@ -20,9 +27,14 @@ import com.rorpage.purtyweather.models.ApiError
 import com.rorpage.purtyweather.models.WeatherResponse
 import com.rorpage.purtyweather.network.ApiService
 import com.rorpage.purtyweather.network.ErrorUtils
+import com.rorpage.purtyweather.network.Result
 import com.rorpage.purtyweather.network.safeApiCall
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -39,17 +51,46 @@ class BackgroundWork @AssistedInject constructor(
     val hourlyDAO: HourlyDAO,
     val hourlyWeatherDAO: HourlyWeatherDAO,
     val apiService: ApiService,
-) : Worker(appContext, workerParams) {
+) : CoroutineWorker(appContext, workerParams) {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
 
-        // Do the work here
+        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Timber.e("Location permission not granted")
+            return Result.failure()
+        }
 
-        // Indicate whether the work finished successfully with the Result
-        return Result.success()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
+        mNotificationManager = NotificationManager(applicationContext)
+        //TODO version of
+        // startForeground(NotificationManager.NOTIFICATION_ID,
+        //            mNotificationManager.sendNotification("Loading..."))
+
+        val location = fusedLocationClient.lastLocation.await()
+
+        var returnResult = Result.failure()
+
+        if (location != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = getWeather(location.latitude, location.longitude)
+                returnResult = when (result) {
+                    is com.rorpage.purtyweather.network.Result.Success -> {
+                        handleWeatherResult(result.data)
+                        Result.success()
+                    }
+                    is com.rorpage.purtyweather.network.Result.Error -> {
+                        Timber.e(result.exception)
+                        Result.failure()
+                    }
+                }
+            }
+        }
+
+        return returnResult
     }
 
     private fun handleWeatherResult(weatherResponse: WeatherResponse) {

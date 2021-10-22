@@ -10,7 +10,7 @@ import com.rorpage.purtyweather.util.WeatherUpdateScheduler
 @ExperimentalPagerApi
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        ServiceManager.startUpdateWeatherService(context)
-        WeatherUpdateScheduler.scheduleJob(context)
+//        ServiceManager.startUpdateWeatherService(context)
+//        WeatherUpdateScheduler.scheduleJob(context)
     }
 }
