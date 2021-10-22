@@ -10,7 +10,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.rorpage.purtyweather.managers.ServiceManager.startUpdateWeatherService
 import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
@@ -23,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupBottomNav()
         checkPermissions()
-        startUpdateWeatherService(applicationContext)
         scheduleJob(applicationContext)
     }
 

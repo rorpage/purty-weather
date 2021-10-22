@@ -12,12 +12,6 @@ object WeatherUpdateScheduler {
     @JvmStatic
     @JvmOverloads
     fun scheduleJob(context: Context, minimumLatencyMinutes: Int = 1) {
-//        val serviceComponent = ComponentName(context, PurtyWeatherService::class.java)
-//        val builder = JobInfo.Builder(0, serviceComponent)
-//        builder.setMinimumLatency(minimumLatencyMinutes * 60000.toLong())
-//        val jobScheduler = context.getSystemService(JobScheduler::class.java)
-//        jobScheduler.schedule(builder.build())
-
         val backgroundWorkRequest = PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes.toLong(), TimeUnit.MINUTES)
                 // Additional configuration
                 .build()
