@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.rorpage.purtyweather.ComposeActivity
 import com.rorpage.purtyweather.MainActivity
 import com.rorpage.purtyweather.R
 
@@ -50,7 +51,7 @@ class NotificationManager(private val mContext: Context) {
 
     private val pendingIntent: PendingIntent
         private get() {
-            val intent = Intent(mContext, MainActivity::class.java)
+            val intent = Intent(mContext, ComposeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             return PendingIntent.getActivity(mContext, 0, intent, FLAG_IMMUTABLE)
         }
