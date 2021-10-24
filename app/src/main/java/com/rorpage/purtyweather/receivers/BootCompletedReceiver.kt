@@ -10,6 +10,6 @@ import com.rorpage.purtyweather.util.WeatherUpdateScheduler
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         //TODO really we want to use the previous work request.
-        WeatherUpdateScheduler.scheduleJob(context)
+        WeatherUpdateScheduler.scheduleJob(context, false)
     }
 }

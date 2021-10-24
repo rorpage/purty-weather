@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupBottomNav()
         checkPermissions()
-        scheduleJob(applicationContext)
+        scheduleJob(applicationContext,  true)
     }
 
     private fun setupBottomNav() {
