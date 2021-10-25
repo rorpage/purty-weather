@@ -3,40 +3,31 @@ package com.rorpage.purtyweather
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.rorpage.purtyweather.managers.ServiceManager.startUpdateWeatherService
-import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
+import com.rorpage.purtyweather.managers.ServiceManager
+import com.rorpage.purtyweather.ui.PurtyWeatherApp
+import com.rorpage.purtyweather.util.WeatherUpdateScheduler
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.ArrayList
+import java.util.*
 
 @ExperimentalPagerApi
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setupBottomNav()
+        setContent {
+           PurtyWeatherApp()
+        }
         checkPermissions()
-        startUpdateWeatherService(applicationContext)
-        scheduleJob(applicationContext)
-    }
-
-    private fun setupBottomNav() {
-        val navView = findViewById<BottomNavigationView>(R.id.nav_view)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build()
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-        NavigationUI.setupWithNavController(navView, navController)
+        ServiceManager.startUpdateWeatherService(applicationContext)
+        WeatherUpdateScheduler.scheduleJob(applicationContext)
     }
 
     private fun checkPermissions() {
@@ -55,3 +46,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+

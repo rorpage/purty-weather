@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.material.tabs.TabLayoutMediator
-import com.rorpage.purtyweather.ComposeActivity
+import com.rorpage.purtyweather.MainActivity
 import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.adapter.HourlyForecastAdapter
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
                 })
 
         root.buttonComposeActivity.setOnClickListener {
-            val intent = Intent(this.context, ComposeActivity::class.java)
+            val intent = Intent(this.context, MainActivity::class.java)
 
             startActivity(intent)
         }

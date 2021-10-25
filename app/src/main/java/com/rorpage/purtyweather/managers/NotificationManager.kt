@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.rorpage.purtyweather.MainActivity
