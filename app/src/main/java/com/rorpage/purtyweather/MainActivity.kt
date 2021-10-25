@@ -19,7 +19,7 @@ import java.util.*
 
 @ExperimentalPagerApi
 @AndroidEntryPoint
-class ComposeActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
