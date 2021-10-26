@@ -34,7 +34,9 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -77,8 +79,7 @@ class BackgroundWork @AssistedInject constructor(
         var returnResult = Result.failure()
 
         if (location != null) {
-            //TODO block on this. right now it's not so the result is always failure
-            CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
                 val result = getWeather(location.latitude, location.longitude)
                 returnResult = when (result) {
                     is com.rorpage.purtyweather.network.Result.Success -> {
