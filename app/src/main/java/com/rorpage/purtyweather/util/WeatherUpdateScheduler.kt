@@ -1,6 +1,7 @@
 package com.rorpage.purtyweather.util
 
 import android.content.Context
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -10,6 +11,9 @@ import com.rorpage.purtyweather.services.BackgroundWork
 import java.util.concurrent.TimeUnit
 
 object WeatherUpdateScheduler {
+
+    val tagName = "weatherApiCall"
+
     @ExperimentalPagerApi
     @JvmStatic
     @JvmOverloads
@@ -17,27 +21,19 @@ object WeatherUpdateScheduler {
 
         val minimumLatencyMinutes = 15L
 
-        val workRequest = if (fromUI) {
-            OneTimeWorkRequestBuilder<BackgroundWork>()
-                .addTag("weatherApiCall")
+        val wm = WorkManager.getInstance(context)
+
+        if (fromUI) {
+            val workRequest = OneTimeWorkRequestBuilder<BackgroundWork>()
+                .addTag(tagName)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
-        } else {
-            PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes, TimeUnit.MINUTES)
-                .addTag("weatherApiCall")
-                .build()
-        }
-
-        val wm = WorkManager.getInstance(context)
-//        val future: ListenableFuture<List<WorkInfo>> = wm.getWorkInfosByTag("weatherApiCall")
-//        val list: List<WorkInfo> = future.get()
-//        // start only if no such tasks present
-//        if (list.size == 0 || list.get(0).progr) {
-//            // shedule the task
             wm.enqueue(workRequest)
-//        } else {
-//            // this periodic task has been previously scheduled
-//        }
-
+        } else {
+            val workRequest = PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes, TimeUnit.MINUTES)
+                .addTag(tagName)
+                .build()
+            wm.enqueueUniquePeriodicWork(tagName, ExistingPeriodicWorkPolicy.REPLACE, workRequest)
+        }
     }
 }
