@@ -72,6 +72,8 @@ class BackgroundWork @AssistedInject constructor(
 
         val location = fusedLocationClient.lastLocation.await()
 
+        Timber.d("location is $location")
+
         var returnResult = Result.failure()
 
         if (location != null) {
