@@ -179,7 +179,6 @@ class BackgroundWork @AssistedInject constructor(
 
         val apiError: ApiError = ErrorUtils(applicationContext).parseError(response)
         return com.rorpage.purtyweather.network.Result.Error(IOException(apiError.message))
-
     }
 
     private fun getIconId(temperature: Double?): Int {
@@ -198,7 +197,7 @@ class BackgroundWork @AssistedInject constructor(
     }
 
     private fun getIconIdFromResources(name: String, defType: String): Int {
-        return R.drawable.ic_stat_wb_sunny
+        return applicationContext.resources.getIdentifier(name, defType, applicationContext.packageName)
     }
 
     private fun purgeDB() {
