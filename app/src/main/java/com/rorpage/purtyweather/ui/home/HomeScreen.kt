@@ -1,7 +1,6 @@
 package com.rorpage.purtyweather.ui.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,21 +10,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -60,7 +56,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         ) {
             Greeting("Purty Person")
             Text(currentDate,
-                    style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold))
+                style = MaterialTheme.typography.h2)
             Row( modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
@@ -74,8 +70,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                         modifier = Modifier.width(100.dp).height(100.dp)
                 )
                 Text("${currentTempToDisplay(currentWeatherWithWeatherList?.currentWeather)}°",
-                        style = TextStyle(
-                                fontSize = 100.sp, fontWeight = FontWeight.Bold))  // TODO: 10/18/21 make text size not scale https://stackoverflow.com/questions/65893939/how-to-convert-textunit-to-dp-in-jetpack-compose
+                        style = MaterialTheme.typography.h1)  // TODO: 10/18/21 make text size not scale https://stackoverflow.com/questions/65893939/how-to-convert-textunit-to-dp-in-jetpack-compose
 
                 Text(currentWeatherWithWeatherList?.weatherList?.first()?.description ?: "-")
             }
