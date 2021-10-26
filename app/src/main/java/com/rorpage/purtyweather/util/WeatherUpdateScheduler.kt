@@ -15,7 +15,7 @@ object WeatherUpdateScheduler {
     @JvmOverloads
     fun scheduleJob(context: Context, fromUI: Boolean) {
 
-        val minimumLatencyMinutes = 15
+        val minimumLatencyMinutes = 15L
 
         val workRequest = if (fromUI) {
             OneTimeWorkRequestBuilder<BackgroundWork>()
@@ -23,7 +23,7 @@ object WeatherUpdateScheduler {
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
         } else {
-            PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes.toLong(), TimeUnit.MINUTES)
+            PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes, TimeUnit.MINUTES)
                 .addTag("weatherApiCall")
                 .build()
         }
