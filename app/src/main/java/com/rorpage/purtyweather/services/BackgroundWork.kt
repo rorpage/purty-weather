@@ -77,6 +77,7 @@ class BackgroundWork @AssistedInject constructor(
         var returnResult = Result.failure()
 
         if (location != null) {
+            //TODO block on this. right now it's not so the result is always failure
             CoroutineScope(Dispatchers.IO).launch {
                 val result = getWeather(location.latitude, location.longitude)
                 returnResult = when (result) {

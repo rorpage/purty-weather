@@ -23,17 +23,20 @@ object WeatherUpdateScheduler {
 
         val wm = WorkManager.getInstance(context)
 
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes, TimeUnit.MINUTES)
+            .addTag(tagName)
+
         if (fromUI) {
             val workRequest = OneTimeWorkRequestBuilder<BackgroundWork>()
                 .addTag(tagName)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
             wm.enqueue(workRequest)
-        } else {
-            val workRequest = PeriodicWorkRequestBuilder<BackgroundWork>(minimumLatencyMinutes, TimeUnit.MINUTES)
-                .addTag(tagName)
-                .build()
-            wm.enqueueUniquePeriodicWork(tagName, ExistingPeriodicWorkPolicy.REPLACE, workRequest)
+
+            periodicWorkRequest.setInitialDelay(minimumLatencyMinutes, TimeUnit.MINUTES)
         }
+
+        //even if we're from the UI, make sure this is scheduled.
+        wm.enqueueUniquePeriodicWork(tagName, ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest.build())
     }
 }
