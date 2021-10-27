@@ -1,8 +1,7 @@
-package com.rorpage.purtyweather.di
+package com.rorpage.purtyweather.database
 
 import android.content.Context
 import androidx.room.Room
-import com.rorpage.purtyweather.database.AppDatabase
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
 import com.rorpage.purtyweather.database.daos.HourlyDAO
 import com.rorpage.purtyweather.database.daos.HourlyWeatherDAO

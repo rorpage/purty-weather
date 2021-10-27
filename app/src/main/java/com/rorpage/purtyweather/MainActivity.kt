@@ -6,14 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
-import androidx.navigation.Navigation
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.rorpage.purtyweather.managers.ServiceManager
 import com.rorpage.purtyweather.ui.PurtyWeatherApp
-import com.rorpage.purtyweather.util.WeatherUpdateScheduler
+import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -26,8 +21,7 @@ class MainActivity : ComponentActivity() {
            PurtyWeatherApp()
         }
         checkPermissions()
-        ServiceManager.startUpdateWeatherService(applicationContext)
-        WeatherUpdateScheduler.scheduleJob(applicationContext)
+        scheduleJob(applicationContext,  true)
     }
 
     private fun checkPermissions() {
