@@ -3,10 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
-
-def apikeyPropertiesFile = rootProject.file("apikey.properties")
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
 def composeVersion = "1.0.3"
 
@@ -19,7 +16,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "OWMAPIKEY", apikeyProperties['apikey'])
 
         kapt {
             arguments {

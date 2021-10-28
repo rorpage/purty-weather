@@ -12,7 +12,7 @@ interface ApiService {
     @GET("onecall")
     suspend fun getWeather(@Query("lat") latitude: Double,
         @Query("lon") longtitude: Double,
-        @Query("appid") appId: String = BuildConfig.OWMAPIKEY,
+        @Query("appid") appId: String = BuildConfig.apikey,
         @Query("units") units: String = "imperial"): Response<WeatherResponse>
 
 }
