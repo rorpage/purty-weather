@@ -45,6 +45,7 @@ class NotificationManager(private val mContext: Context) {
                 .setVibrate(null)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
     }
 
     private val pendingIntent: PendingIntent
