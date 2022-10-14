@@ -1,19 +1,16 @@
 package com.rorpage.purtyweather.services
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.database.daos.CurrentWeatherDAO
 import com.rorpage.purtyweather.database.daos.HourlyDAO
 import com.rorpage.purtyweather.database.daos.HourlyWeatherDAO
@@ -23,25 +20,21 @@ import com.rorpage.purtyweather.database.entities.HourlyEntity
 import com.rorpage.purtyweather.database.entities.HourlyWeatherEntity
 import com.rorpage.purtyweather.database.entities.WeatherEntity
 import com.rorpage.purtyweather.managers.NotificationManager
+import com.rorpage.purtyweather.managers.NotificationManager.Companion.NOTIFICATION_ID
 import com.rorpage.purtyweather.models.ApiError
 import com.rorpage.purtyweather.models.WeatherResponse
 import com.rorpage.purtyweather.network.ApiService
 import com.rorpage.purtyweather.network.ErrorUtils
-import com.rorpage.purtyweather.network.Result
 import com.rorpage.purtyweather.network.safeApiCall
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
+import java.io.IOException
+import java.util.Locale
+import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.io.IOException
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.math.roundToInt
 
 @ExperimentalPagerApi
 @HiltWorker
@@ -68,9 +61,6 @@ class BackgroundWork @AssistedInject constructor(
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
         mNotificationManager = NotificationManager(applicationContext)
-        //TODO version of
-        // startForeground(NotificationManager.NOTIFICATION_ID,
-        //            mNotificationManager.sendNotification("Loading..."))
 
         val location = fusedLocationClient.lastLocation.await()
 
@@ -95,6 +85,14 @@ class BackgroundWork @AssistedInject constructor(
         }
 
         return returnResult
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        mNotificationManager = NotificationManager(applicationContext)
+        return ForegroundInfo(
+            NOTIFICATION_ID,
+            mNotificationManager.sendNotification("Loading...")
+        )
     }
 
     private fun handleWeatherResult(weatherResponse: WeatherResponse) {
