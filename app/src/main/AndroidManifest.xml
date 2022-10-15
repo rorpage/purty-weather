@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
 
+        <!-- needed for the background job to work -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
