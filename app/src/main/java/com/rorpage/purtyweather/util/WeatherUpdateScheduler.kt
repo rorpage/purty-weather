@@ -36,7 +36,7 @@ object WeatherUpdateScheduler {
             periodicWorkRequest.setInitialDelay(minimumLatencyMinutes, TimeUnit.MINUTES)
         }
 
-        //even if we're from the UI, make sure this is scheduled.
+        // even if we're from the UI, make sure this is scheduled.
         wm.enqueueUniquePeriodicWork(tagName, ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest.build())
     }
 }

@@ -1,18 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
-def composeVersion = "1.0.3"
+def composeVersion = "1.2.1"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.rorpage.purtyweather"
         minSdkVersion 26
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -39,20 +38,20 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
     buildFeatures {
         compose true
+        viewBinding = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion composeVersion
-        kotlinCompilerVersion '1.5.21'
+        kotlinCompilerExtensionVersion "1.2.0"
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'com.rorpage.purtyweather'
 
 }
 
@@ -61,14 +60,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // UI
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation "androidx.compose.material:material-icons-extended:$composeVersion"
 
@@ -80,27 +79,27 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-rc01"
-    implementation "androidx.activity:activity-compose:1.3.1"
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha02"
+    implementation "androidx.activity:activity-compose:1.6.0"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha04"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.19.0"
     implementation "com.google.accompanist:accompanist-permissions:0.19.0"
     implementation "com.google.accompanist:accompanist-pager:0.19.0"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.19.0"
 
     // Navigation
-    implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
+    implementation "androidx.navigation:navigation-compose:2.6.0-alpha02"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Utilities
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.work:work-runtime-ktx:2.7.0'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     // Networking
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -109,33 +108,30 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     // Serialization
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     // Dependency Injection
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$composeVersion"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     implementation 'androidx.hilt:hilt-work:1.0.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
 
-
     // Database
-    implementation "androidx.room:room-runtime:2.2.5"
-    kapt "androidx.room:room-compiler:2.2.5"
-    implementation 'com.facebook.stetho:stetho:1.5.1'
+    implementation "androidx.room:room-runtime:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
 
     // Testing
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Kotlin
-    implementation "androidx.core:core-ktx:1.6.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.2'
+    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }
 repositories {
