@@ -2,7 +2,6 @@ package com.rorpage.purtyweather.network
 
 import com.rorpage.purtyweather.BuildConfig
 import com.rorpage.purtyweather.models.WeatherResponse
-import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -10,7 +10,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.rorpage.purtyweather.ui.PurtyWeatherApp
 import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @ExperimentalPagerApi
 @AndroidEntryPoint

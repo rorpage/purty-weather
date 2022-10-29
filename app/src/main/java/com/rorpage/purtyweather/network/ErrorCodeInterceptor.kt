@@ -1,9 +1,8 @@
 package com.rorpage.purtyweather.network
 
+import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.io.IOException
-import kotlin.jvm.Throws
 
 class ErrorCodeInterceptor : Interceptor {
     @Throws(IOException::class)

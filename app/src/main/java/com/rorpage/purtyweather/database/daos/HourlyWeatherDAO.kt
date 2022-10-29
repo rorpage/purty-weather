@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.rorpage.purtyweather.database.entities.HourlyWeatherEntity
-import com.rorpage.purtyweather.database.entities.WeatherEntity
 
 @Dao
 interface HourlyWeatherDAO {

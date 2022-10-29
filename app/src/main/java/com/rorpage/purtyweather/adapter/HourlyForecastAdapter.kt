@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rorpage.purtyweather.R
 import com.rorpage.purtyweather.database.entities.HourlyWeatherWithWeatherList
 import com.rorpage.purtyweather.util.WeatherIconsUtil
-import timber.log.Timber
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import timber.log.Timber
 
 class HourlyForecastAdapter(private val hourlyWeatherLists: ArrayList<List<HourlyWeatherWithWeatherList>>) : RecyclerView.Adapter<HourlyForecastAdapter.ViewHolder>() {
 

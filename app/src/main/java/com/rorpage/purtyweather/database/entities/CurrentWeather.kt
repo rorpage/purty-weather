@@ -2,8 +2,6 @@ package com.rorpage.purtyweather.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
-import com.rorpage.purtyweather.models.Weather
 
 @Entity
 data class CurrentWeather(
