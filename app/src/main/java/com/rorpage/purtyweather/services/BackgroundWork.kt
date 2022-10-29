@@ -28,13 +28,13 @@ import com.rorpage.purtyweather.network.ErrorUtils
 import com.rorpage.purtyweather.network.safeApiCall
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.io.IOException
-import java.util.Locale
-import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.IOException
+import java.util.Locale
+import kotlin.math.roundToInt
 
 @ExperimentalPagerApi
 @HiltWorker
@@ -45,16 +45,16 @@ class BackgroundWork @AssistedInject constructor(
     val weatherDAO: WeatherDAO,
     val hourlyDAO: HourlyDAO,
     val hourlyWeatherDAO: HourlyWeatherDAO,
-    val apiService: ApiService,
+    val apiService: ApiService
 ) : CoroutineWorker(appContext, workerParams) {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mNotificationManager: NotificationManager
 
     override suspend fun doWork(): Result {
-
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
             Timber.e("Location permission not granted")
             return Result.failure()
         }
@@ -102,14 +102,16 @@ class BackgroundWork @AssistedInject constructor(
             "%.0f\u00B0 and %s. Feels like %.0f\u00B0.",
             currentTemperature,
             weatherResponse.current!!.weather!![0].description,
-            weatherResponse.current!!.feelsLike)
+            weatherResponse.current!!.feelsLike
+        )
         val today = weatherResponse.daily!![0]
         val subtitle = String.format(
             Locale.US,
             "Today: High %.0f\u00B0, low %.0f\u00B0, %s",
             today.temp?.max,
             today.temp?.min,
-            today.weather!![0].description)
+            today.weather!![0].description
+        )
         val iconId = getIconId(currentTemperature)
         mNotificationManager.sendNotification(title, subtitle, iconId)
 
@@ -125,7 +127,8 @@ class BackgroundWork @AssistedInject constructor(
         weatherDAO.insertWeatherList(weatherEntityList)
 
         currentWeatherDAO.insertCurrentTemperature(
-            CurrentWeather(1,
+            CurrentWeather(
+                1,
                 currentTemperature ?: -40.0,
                 weatherResponse.current?.feelsLike ?: -40.0,
                 weatherResponse.current?.dt ?: 0,
@@ -146,18 +149,25 @@ class BackgroundWork @AssistedInject constructor(
         var hourlyWeatherEntityCounter = 1
         weatherResponse.hourly?.forEach { weatherInfoUnit ->
             Timber.v("Saving hourly entity with id: ${hourlyId + 1}")
-            val hourlyEntity = HourlyEntity(hourlyId++, weatherInfoUnit.temp,
+            val hourlyEntity = HourlyEntity(
+                hourlyId++, weatherInfoUnit.temp,
                 weatherInfoUnit.feelsLike, weatherInfoUnit.dt, weatherInfoUnit.sunrise, weatherInfoUnit.sunset, weatherInfoUnit.pressure,
                 weatherInfoUnit.humidity, weatherInfoUnit.dewPoint, weatherInfoUnit.uvi, weatherInfoUnit.clouds, weatherInfoUnit.visibility,
-                weatherInfoUnit.windSpeed, weatherInfoUnit.windDeg)
+                weatherInfoUnit.windSpeed, weatherInfoUnit.windDeg
+            )
 
             val hourlyWeatherEntityList = ArrayList<HourlyWeatherEntity>()
             weatherInfoUnit.weather?.forEach {
                 Timber.v("Saving hourly weather entity with id: ${hourlyWeatherEntityCounter + 1} and hourly id: $hourlyId")
                 hourlyWeatherEntityList.add(
-                    HourlyWeatherEntity(hourlyWeatherEntityCounter++,
-                    hourlyId - 1, it.id, it.main ?: "",
-                    it.description ?: "", it.icon ?: "01d")
+                    HourlyWeatherEntity(
+                        hourlyWeatherEntityCounter++,
+                        hourlyId - 1,
+                        it.id,
+                        it.main ?: "",
+                        it.description ?: "",
+                        it.icon ?: "01d"
+                    )
                 )
             }
 
@@ -208,5 +218,4 @@ class BackgroundWork @AssistedInject constructor(
         hourlyWeatherDAO.deleteAll()
         weatherDAO.deleteAll()
     }
-
 }

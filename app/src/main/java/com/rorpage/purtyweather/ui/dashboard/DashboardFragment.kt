@@ -12,8 +12,11 @@ import com.rorpage.purtyweather.R
 class DashboardFragment : Fragment() {
     private val dashboardViewModel: DashboardViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
         val textView = root.findViewById<TextView>(R.id.text_dashboard)
         dashboardViewModel.text.observe(viewLifecycleOwner, { s -> textView.text = s })

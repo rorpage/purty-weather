@@ -40,12 +40,12 @@ class DatabaseModule {
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
         return Room.databaseBuilder(
-                appContext,
-                AppDatabase::class.java,
-                "com.rorpage.purtyweather.roomdb"
+            appContext,
+            AppDatabase::class.java,
+            "com.rorpage.purtyweather.roomdb"
         )
-                // TODO: 10/17/20 We will want to add support for backgrounding these, probably with coroutines
-                .allowMainThreadQueries()
-                .build()
+            // TODO: 10/17/20 We will want to add support for backgrounding these, probably with coroutines
+            .allowMainThreadQueries()
+            .build()
     }
 }

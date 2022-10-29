@@ -1,8 +1,8 @@
 package com.rorpage.purtyweather.network
 
-import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 
 class ErrorCodeInterceptor : Interceptor {
     @Throws(IOException::class)
@@ -13,8 +13,8 @@ class ErrorCodeInterceptor : Interceptor {
         val newCode = response.code
 
         return response.newBuilder()
-                .body(response.body)
-                .code(newCode)
-                .build()
+            .body(response.body)
+            .code(newCode)
+            .build()
     }
 }

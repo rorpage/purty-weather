@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+import javax.inject.Inject
 
 @HiltAndroidApp
 class PurtyWeatherApplication : Application(), Configuration.Provider {

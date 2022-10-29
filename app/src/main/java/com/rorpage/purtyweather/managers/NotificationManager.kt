@@ -15,11 +15,14 @@ import com.rorpage.purtyweather.R
 @ExperimentalPagerApi
 class NotificationManager(private val mContext: Context) {
     private val mNotificationManager: NotificationManager =
-            mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     fun sendNotification(message: String?): Notification {
         val smallIcon = mContext.resources
-                .getIdentifier("ic_launcher", "mipmap",
-                        mContext.packageName)
+            .getIdentifier(
+                "ic_launcher",
+                "mipmap",
+                mContext.packageName
+            )
         val notificationTitle = mContext.getString(R.string.app_name)
         return sendNotification(notificationTitle, message, smallIcon)
     }
@@ -27,25 +30,32 @@ class NotificationManager(private val mContext: Context) {
     fun sendNotification(title: String, message: String?, smallIcon: Int): Notification {
         buildNotificationChannelIfNeeded()
         val pendingIntent = pendingIntent
-        val notificationBuilder = getNotificationBuilder(title, message,
-                pendingIntent, smallIcon)
+        val notificationBuilder = getNotificationBuilder(
+            title,
+            message,
+            pendingIntent,
+            smallIcon
+        )
         val notification = notificationBuilder.build()
         mNotificationManager.notify(NOTIFICATION_ID, notification)
         return notification
     }
 
-    private fun getNotificationBuilder(title: String, message: String?,
-                                       pendingIntent: PendingIntent,
-                                       smallIcon: Int): NotificationCompat.Builder {
+    private fun getNotificationBuilder(
+        title: String,
+        message: String?,
+        pendingIntent: PendingIntent,
+        smallIcon: Int
+    ): NotificationCompat.Builder {
         return NotificationCompat.Builder(mContext, PRIMARY_CHANNEL)
-                .setSmallIcon(smallIcon)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setOngoing(true)
-                .setVibrate(null)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(pendingIntent)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setSmallIcon(smallIcon)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setOngoing(true)
+            .setVibrate(null)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
     }
 
     private val pendingIntent: PendingIntent
@@ -56,9 +66,11 @@ class NotificationManager(private val mContext: Context) {
         }
 
     private fun buildNotificationChannelIfNeeded() {
-        val channel = NotificationChannel(PRIMARY_CHANNEL,
-                mContext.getString(R.string.notification_channel_default),
-                NotificationManager.IMPORTANCE_LOW)
+        val channel = NotificationChannel(
+            PRIMARY_CHANNEL,
+            mContext.getString(R.string.notification_channel_default),
+            NotificationManager.IMPORTANCE_LOW
+        )
         channel.setShowBadge(false)
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         mNotificationManager.createNotificationChannel(channel)
@@ -68,5 +80,4 @@ class NotificationManager(private val mContext: Context) {
         const val NOTIFICATION_ID = 1
         private const val PRIMARY_CHANNEL = "default"
     }
-
 }

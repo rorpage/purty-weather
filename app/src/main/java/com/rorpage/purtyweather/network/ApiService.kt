@@ -9,9 +9,10 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("onecall")
-    suspend fun getWeather(@Query("lat") latitude: Double,
+    suspend fun getWeather(
+        @Query("lat") latitude: Double,
         @Query("lon") longtitude: Double,
         @Query("appid") appId: String = BuildConfig.apikey,
-        @Query("units") units: String = "imperial"): Response<WeatherResponse>
-
+        @Query("units") units: String = "imperial"
+    ): Response<WeatherResponse>
 }

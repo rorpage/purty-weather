@@ -16,7 +16,7 @@ interface CurrentWeatherDAO {
     fun getCurrentWeather(): LiveData<CurrentWeather>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCurrentTemperature( currentTemperature: CurrentWeather)
+    fun insertCurrentTemperature(currentTemperature: CurrentWeather)
 
     @Transaction
     @Query("SELECT * FROM CurrentWeather WHERE id = 1")
@@ -24,5 +24,4 @@ interface CurrentWeatherDAO {
 
     @Query("DELETE FROM CurrentWeather")
     fun deleteAll()
-
 }

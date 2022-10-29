@@ -15,5 +15,4 @@ class WeatherIconsUtil(val context: Context) {
     fun getIconId(iconFileName: String): Int {
         return context.resources.getIdentifier("wi_$iconFileName", "drawable", context.packageName)
     }
-
 }

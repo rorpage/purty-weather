@@ -29,7 +29,6 @@ import com.rorpage.purtyweather.ui.home.HomeViewModel
 import com.rorpage.purtyweather.ui.theme.PurtyBlue
 import com.rorpage.purtyweather.ui.theme.PurtyWeatherTheme
 
-
 object MainDestinations {
     const val HOME_ROUTE = "home"
 }
@@ -44,7 +43,6 @@ val screens = listOf(Screen.Home)
 @Composable
 fun PurtyWeatherApp() {
     PurtyWeatherTheme {
-
         val navController = rememberNavController()
 
         Scaffold(
@@ -79,12 +77,12 @@ fun PurtyWeatherApp() {
                 }
             }
         ) { innerPadding ->
-           NavHost(navController = navController, startDestination = Screen.Home.route, modifier = Modifier.padding(innerPadding)) {
-               composable(Screen.Home.route) {
-                   val homeViewModel = hiltViewModel<HomeViewModel>()
-                   HomeScreen(homeViewModel)
-               }
-           }
+            NavHost(navController = navController, startDestination = Screen.Home.route, modifier = Modifier.padding(innerPadding)) {
+                composable(Screen.Home.route) {
+                    val homeViewModel = hiltViewModel<HomeViewModel>()
+                    HomeScreen(homeViewModel)
+                }
+            }
         }
     }
 }

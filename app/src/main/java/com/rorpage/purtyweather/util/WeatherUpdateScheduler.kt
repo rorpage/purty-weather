@@ -18,7 +18,6 @@ object WeatherUpdateScheduler {
     @JvmStatic
     @JvmOverloads
     fun scheduleJob(context: Context, fromUI: Boolean) {
-
         val minimumLatencyMinutes = 15L
 
         val wm = WorkManager.getInstance(context)
