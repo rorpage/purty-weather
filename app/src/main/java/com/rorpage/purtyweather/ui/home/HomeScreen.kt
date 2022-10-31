@@ -37,40 +37,48 @@ import kotlin.math.roundToInt
 @ExperimentalPagerApi
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel) {
-
     val currentWeatherWithWeatherList by homeViewModel.getCurrentWeather().observeAsState()
     val hourlyWeatherWithWeatherList by homeViewModel.getHourlyWeather().observeAsState()
 
     val currentDate = LocalDate.now().format(homeViewModel.localDateFormatter)
 
-    Column(Modifier
+    Column(
+        Modifier
             .fillMaxWidth(1f)
-            .fillMaxHeight(1f)) {
+            .fillMaxHeight(1f)
+    ) {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier
-                        .fillMaxHeight(.4f)
-                        .fillMaxWidth(1f)
-                        .padding(bottom = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier
+                .fillMaxHeight(.4f)
+                .fillMaxWidth(1f)
+                .padding(bottom = 20.dp)
         ) {
             Greeting("Purty Person")
-            Text(currentDate,
-                style = MaterialTheme.typography.h2)
-            Row( modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+            Text(
+                currentDate,
+                style = MaterialTheme.typography.h2
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                        painter = painterResource(
-                                WeatherIconsUtil(LocalContext.current)
-                                        .getIconId(
-                                                currentWeatherWithWeatherList?.weatherList?.first()?.icon ?: "moon_new")),
-                        contentDescription = "weather image",
-                        modifier = Modifier.width(100.dp).height(100.dp)
+                    painter = painterResource(
+                        WeatherIconsUtil(LocalContext.current)
+                            .getIconId(
+                                currentWeatherWithWeatherList?.weatherList?.first()?.icon ?: "moon_new"
+                            )
+                    ),
+                    contentDescription = "weather image",
+                    modifier = Modifier.width(100.dp).height(100.dp)
                 )
-                Text("${currentTempToDisplay(currentWeatherWithWeatherList?.currentWeather)}°",
-                        style = MaterialTheme.typography.h1)  // TODO: 10/18/21 make text size not scale https://stackoverflow.com/questions/65893939/how-to-convert-textunit-to-dp-in-jetpack-compose
+                Text(
+                    "${currentTempToDisplay(currentWeatherWithWeatherList?.currentWeather)}°",
+                    style = MaterialTheme.typography.h1
+                ) // TODO: 10/18/21 make text size not scale https://stackoverflow.com/questions/65893939/how-to-convert-textunit-to-dp-in-jetpack-compose
 
                 Text(currentWeatherWithWeatherList?.weatherList?.first()?.description ?: "-")
             }
@@ -89,16 +97,16 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 count = 2,
                 state = pagerState,
                 modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
+                    .fillMaxWidth()
+                    .height(100.dp)
             ) { page ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .padding(start = 10.dp, end = 10.dp)
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .padding(start = 10.dp, end = 10.dp)
                 ) {
                     reducedHourlyWeatherList[page]?.forEach { hourlyWeatherItem ->
                         HourlyWeatherColumn(
@@ -113,8 +121,8 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             HorizontalPagerIndicator(
                 pagerState = pagerState,
                 modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(16.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp)
             )
         }
     }

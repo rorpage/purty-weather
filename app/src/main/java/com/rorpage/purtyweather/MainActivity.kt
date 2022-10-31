@@ -10,7 +10,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.rorpage.purtyweather.ui.PurtyWeatherApp
 import com.rorpage.purtyweather.util.WeatherUpdateScheduler.scheduleJob
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @ExperimentalPagerApi
 @AndroidEntryPoint
@@ -18,10 +17,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-           PurtyWeatherApp()
+            PurtyWeatherApp()
         }
         checkPermissions()
-        scheduleJob(applicationContext,  true)
+        scheduleJob(applicationContext, true)
     }
 
     private fun checkPermissions() {
@@ -40,4 +39,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

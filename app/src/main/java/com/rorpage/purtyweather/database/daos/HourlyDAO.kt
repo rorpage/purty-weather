@@ -24,5 +24,4 @@ interface HourlyDAO {
 
     @Query("DELETE FROM HourlyEntity")
     fun deleteAll()
-
 }

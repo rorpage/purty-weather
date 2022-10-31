@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,7 +28,6 @@ import com.rorpage.purtyweather.ui.home.HomeScreen
 import com.rorpage.purtyweather.ui.home.HomeViewModel
 import com.rorpage.purtyweather.ui.theme.PurtyBlue
 import com.rorpage.purtyweather.ui.theme.PurtyWeatherTheme
-
 
 object MainDestinations {
     const val HOME_ROUTE = "home"
@@ -45,7 +43,6 @@ val screens = listOf(Screen.Home)
 @Composable
 fun PurtyWeatherApp() {
     PurtyWeatherTheme {
-
         val navController = rememberNavController()
 
         Scaffold(
@@ -80,12 +77,12 @@ fun PurtyWeatherApp() {
                 }
             }
         ) { innerPadding ->
-           NavHost(navController = navController, startDestination = Screen.Home.route, modifier = Modifier.padding(innerPadding)) {
-               composable(Screen.Home.route) {
-                   val homeViewModel = hiltViewModel<HomeViewModel>()
-                   HomeScreen(homeViewModel)
-               }
-           }
+            NavHost(navController = navController, startDestination = Screen.Home.route, modifier = Modifier.padding(innerPadding)) {
+                composable(Screen.Home.route) {
+                    val homeViewModel = hiltViewModel<HomeViewModel>()
+                    HomeScreen(homeViewModel)
+                }
+            }
         }
     }
 }

@@ -11,4 +11,5 @@ data class HourlyWeatherEntity(
     val iconId: Int,
     val main: String,
     val description: String,
-    val icon: String)
+    val icon: String
+)

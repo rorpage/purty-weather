@@ -9,7 +9,7 @@ import com.rorpage.purtyweather.util.WeatherUpdateScheduler
 @ExperimentalPagerApi
 class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        //TODO really we want to use the previous work request.
+        // TODO really we want to use the previous work request.
         WeatherUpdateScheduler.scheduleJob(context, false)
     }
 }

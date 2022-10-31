@@ -9,11 +9,10 @@ class WeatherIconsUtil(val context: Context) {
 
     fun getIcon(iconFileName: String): Drawable? {
         Timber.v("Icon Name $iconFileName")
-        return ContextCompat.getDrawable(context, context.resources.getIdentifier("wi_$iconFileName", "drawable", context.packageName))
+        return ContextCompat.getDrawable(context, getIconId(iconFileName))
     }
 
     fun getIconId(iconFileName: String): Int {
         return context.resources.getIdentifier("wi_$iconFileName", "drawable", context.packageName)
     }
-
 }

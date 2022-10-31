@@ -9,7 +9,6 @@ import com.rorpage.purtyweather.database.daos.WeatherDAO
 import com.rorpage.purtyweather.database.entities.CurrentWeather
 import com.rorpage.purtyweather.database.entities.HourlyEntity
 import com.rorpage.purtyweather.database.entities.HourlyWeatherEntity
-import com.rorpage.purtyweather.database.entities.HourlyWeatherWithWeatherList
 import com.rorpage.purtyweather.database.entities.WeatherEntity
 
 @Database(entities = [CurrentWeather::class, WeatherEntity::class, HourlyEntity::class, HourlyWeatherEntity::class], version = 1)

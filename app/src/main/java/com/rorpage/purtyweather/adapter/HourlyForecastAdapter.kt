@@ -67,10 +67,9 @@ class HourlyForecastAdapter(private val hourlyWeatherLists: ArrayList<List<Hourl
         private lateinit var temp8Text: AppCompatTextView
 
         fun bindItems(item: List<HourlyWeatherWithWeatherList>) {
-
             val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("ha")
-                    .withLocale(Locale.US)
-                    .withZone(ZoneId.systemDefault())
+                .withLocale(Locale.US)
+                .withZone(ZoneId.systemDefault())
 
             Timber.v("item list size ${item.size}")
             // Hourly Element 1
@@ -144,9 +143,6 @@ class HourlyForecastAdapter(private val hourlyWeatherLists: ArrayList<List<Hourl
             hourlyItem8Icon.setImageDrawable(WeatherIconsUtil(itemView.context).getIcon(item[7].hourlyWeatherList[0].icon))
             hourlyItem8Text.text = formatter.format(Instant.ofEpochSecond(item[7].hourlyEntity.dt))
             temp8Text.text = itemView.context.getString(R.string.temperature, item[7].hourlyEntity.temperature.toInt())
-
         }
-
     }
-
 }
